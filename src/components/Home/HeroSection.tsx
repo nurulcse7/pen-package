@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const HeroSection = () => {
 	return (
-		<section className="bg-gradient-to-r from-blue-50 to-blue-100 py-12 mt-16">
+		<section className="bg-gradient-to-r from-blue-100 to-blue-400 py-12 mt-16">
 			<div className="container mx-auto px-4 flex flex-col-reverse md:flex-row items-center justify-between gap-8">
 				{/* Left Content */}
 				<div className="md:w-1/2 text-center md:text-left">

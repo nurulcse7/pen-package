@@ -19,11 +19,11 @@ const Navbar = () => {
 	];
 
 	return (
-		<header className="bg-white shadow-md fixed top-0 left-0 w-full z-50">
+		<header className="bg-white py-1 shadow-md fixed top-0 left-0 w-full z-50">
 			<div className="container mx-auto px-4 py-3 flex items-center justify-between">
 				{/* Logo */}
 				<Link href="/" className="text-3xl font-bold text-blue-600">
-					{setting?.siteName}
+					{setting?.siteName ? <>{setting?.siteName}</> : "eLearning Portal"}
 				</Link>
 
 				{/* Desktop Nav */}
@@ -45,11 +45,13 @@ const Navbar = () => {
 							</Link>
 						</>
 					) : (
-						<Link
-							href="/register"
-							className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-							রেজিস্টার করুন
-						</Link>
+						<div className="space-x-3">
+							<Link
+								href="/login"
+								className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+								লগিন করুন
+							</Link>
+						</div>
 					)}
 				</nav>
 
@@ -86,10 +88,10 @@ const Navbar = () => {
 								</>
 							) : (
 								<Link
-									href="/register"
+									href="/login"
 									onClick={toggleMenu}
 									className="block bg-blue-600 text-white text-center px-4 py-2 rounded hover:bg-blue-700 transition">
-									রেজিস্টার করুন
+									লগিন করুন
 								</Link>
 							)}
 						</li>

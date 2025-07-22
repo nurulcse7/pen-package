@@ -72,7 +72,9 @@ const Footer = () => {
 			</div>
 
 			<div className="text-center text-gray-400 mt-8 text-xl pt-8 border-t border-gray-500">
-				© {new Date().getFullYear()} {setting?.siteName}. সর্বস্বত্ব সংরক্ষিত।
+				© {new Date().getFullYear()}{" "}
+				{setting?.siteName ? <>{setting?.siteName}</> : "eLearning Portal"}.
+				সর্বস্বত্ব সংরক্ষিত।
 			</div>
 		</footer>
 	);

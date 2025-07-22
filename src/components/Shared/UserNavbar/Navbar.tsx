@@ -81,7 +81,11 @@ const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 						<div className="flex justify-center w-full">
 							<Link href="/">
 								<span className="  font-bold text-teal-600  text-3xl">
-									{setting?.siteName}
+									{setting?.siteName ? (
+										<>{setting?.siteName}</>
+									) : (
+										"eLearning Portal"
+									)}
 								</span>
 							</Link>
 						</div>
