@@ -1,10 +1,14 @@
 "use client";
 
+import { useSetting } from "@/context/SettingContext";
+import { useUser } from "@/context/UserContext";
 import Link from "next/link";
 import { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 
 const Navbar = () => {
+	const { user } = useUser();
+	const { setting } = useSetting();
 	const [menuOpen, setMenuOpen] = useState(false);
 
 	const toggleMenu = () => setMenuOpen(!menuOpen);
@@ -19,7 +23,7 @@ const Navbar = () => {
 			<div className="container mx-auto px-4 py-3 flex items-center justify-between">
 				{/* Logo */}
 				<Link href="/" className="text-xl font-bold text-blue-600">
-					📦 ইনকাম প্ল্যাটফর্ম
+					{setting?.siteName}
 				</Link>
 
 				{/* Desktop Nav */}
@@ -32,16 +36,26 @@ const Navbar = () => {
 							{link.name}
 						</Link>
 					))}
-					<Link
-						href="/register"
-						className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-						রেজিস্টার করুন
-					</Link>
+					{user?.role && user?.email ? (
+						<>
+							<Link
+								href={`/${user?.role}/dashboard`}
+								className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+								ড্যাশবোর্ড
+							</Link>
+						</>
+					) : (
+						<Link
+							href="/register"
+							className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+							রেজিস্টার করুন
+						</Link>
+					)}
 				</nav>
 
 				{/* Mobile Hamburger */}
 				<div className="md:hidden">
-					<button onClick={toggleMenu}>
+					<button className="text-black" onClick={toggleMenu}>
 						{menuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
 					</button>
 				</div>
@@ -62,12 +76,22 @@ const Navbar = () => {
 							</li>
 						))}
 						<li>
-							<Link
-								href="/register"
-								onClick={toggleMenu}
-								className="block bg-blue-600 text-white text-center px-4 py-2 rounded hover:bg-blue-700 transition">
-								রেজিস্টার করুন
-							</Link>
+							{user?.role && user?.email ? (
+								<>
+									<Link
+										href={`/${user?.role}/dashboard`}
+										className="block bg-blue-600 text-white text-center px-4 py-2 rounded hover:bg-blue-700 transition">
+										ড্যাশবোর্ড
+									</Link>
+								</>
+							) : (
+								<Link
+									href="/register"
+									onClick={toggleMenu}
+									className="block bg-blue-600 text-white text-center px-4 py-2 rounded hover:bg-blue-700 transition">
+									রেজিস্টার করুন
+								</Link>
+							)}
 						</li>
 					</ul>
 				</div>

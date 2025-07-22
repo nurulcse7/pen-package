@@ -27,7 +27,7 @@ const HeroSection = () => {
 				{/* Right Image */}
 				<div className="md:w-1/2">
 					<Image
-						src="/assets/hero-image.svg" // Replace with your own
+						src="/images/earning.webp"
 						alt="Hero Image"
 						width={500}
 						height={400}

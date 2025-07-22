@@ -32,7 +32,7 @@ export default function RootLayout({
 					<SettingProvider>
 						<Navbar />
 						<Toaster position="top-right" />
-						<div className="bg-white text-black">{children}</div>
+						<div className="bg-white text-black  ">{children}</div>
 						<Footer />
 					</SettingProvider>
 				</UserProvider>

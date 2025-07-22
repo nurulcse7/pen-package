@@ -3,19 +3,19 @@ const testimonials = [
 		name: "আবির হোসেন",
 		review:
 			"আমি প্রতিদিন ১-২ ঘণ্টা কাজ করে ভালো ইনকাম করছি। সহজ ও ভেরিফায়েড সাইট। ধন্যবাদ!",
-		image: "/assets/users/abir.jpg",
+		image: "/images/abir.webp",
 	},
 	{
 		name: "সাবিনা আক্তার",
 		review:
 			"শুরুতে সন্দেহ ছিল, এখন নিজেই ইনকাম করছি এবং আমার বন্ধুরাও কাজ করছে। খুব উপকারে এসেছে।",
-		image: "/assets/users/sabina.jpg",
+		image: "/images/sabina.webp",
 	},
 	{
 		name: "রায়হান ইসলাম",
 		review:
 			"অনেক প্ল্যাটফর্ম ট্রাই করেছি, এটা সবচেয়ে legit ও responsive support দেয়। Highly recommended!",
-		image: "/assets/users/raihan.jpg",
+		image: "/images/rayhan.webp",
 	},
 ];
 

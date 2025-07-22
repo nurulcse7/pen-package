@@ -48,14 +48,7 @@ const Register = () => {
 			setError("Please select gender");
 			return false;
 		}
-		if (!form.dob) {
-			setError("Date of Birth is required");
-			return false;
-		}
-		if (!form.nid.trim()) {
-			setError("National ID is required");
-			return false;
-		}
+
 		// শর্তাবলী চেক করার জন্য চেকবক্স থাকলে সে ভ্যালিডেশন এখানে যুক্ত করতে হবে
 		setError("");
 		return true;
@@ -190,38 +183,6 @@ const Register = () => {
 								<option value="Female">Female</option>
 								<option value="Other">Other</option>
 							</select>
-						</div>
-
-						{/* DOB */}
-						<div>
-							<label htmlFor="dob" className="block mb-1 text-sm font-medium">
-								Date of Birth *
-							</label>
-							<input
-								type="date"
-								id="dob"
-								name="dob"
-								className="w-full border border-gray-300 rounded-md px-4 py-2"
-								value={form.dob}
-								onChange={handleChange}
-								required
-							/>
-						</div>
-
-						{/* NID */}
-						<div>
-							<label htmlFor="nid" className="block mb-1 text-sm font-medium">
-								National ID *
-							</label>
-							<input
-								type="text"
-								id="nid"
-								name="nid"
-								className="w-full border border-gray-300 rounded-md px-4 py-2"
-								value={form.nid}
-								onChange={handleChange}
-								required
-							/>
 						</div>
 
 						{/* Promo Code */}

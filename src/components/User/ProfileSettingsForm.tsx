@@ -1,16 +1,28 @@
 "use client";
 
 import { useUser } from "@/context/UserContext";
+import { useState } from "react";
 
 const ProfileSettingsForm = () => {
 	const { user } = useUser();
+	const [copied, setCopied] = useState(false);
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-	) => {console.log(e)};
+	) => {
+		console.log(e);
+	};
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
+	};
+
+	const handleCopy = () => {
+		if (user?.referralCode) {
+			navigator.clipboard.writeText(user.referralCode);
+			setCopied(true);
+			setTimeout(() => setCopied(false), 2000);
+		}
 	};
 
 	return (
@@ -65,29 +77,27 @@ const ProfileSettingsForm = () => {
 							<option value="Other">Other</option>
 						</select>
 					</div>
-					<div>
-						<label className="block mb-1 font-medium">NID</label>
-						<input
-							type="text"
-							name="nid"
-							value={user?.nid}
-							onChange={handleChange}
-							className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-400"
-						/>
-					</div>
-					<div>
-						<label className="block mb-1 font-medium">Date of Birth</label>
-						<input
-							type="date"
-							name="dob"
-							value={user?.dob}
-							onChange={handleChange}
-							className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-400"
-						/>
-					</div>
 				</div>
 
-				<div className="text-right">
+				<div className="space-y-3">
+					<div>
+						<label className="block mb-1 font-medium">My Referrer Code</label>
+						<div className="flex items-center gap-3">
+							<input
+								type="text"
+								value={"5454"}
+								disabled
+								className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded"
+							/>
+							<button
+								type="button"
+								onClick={handleCopy}
+								className="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+								{copied ? "Copied!" : "Copy"}
+							</button>
+						</div>
+					</div>
+
 					<button
 						type="submit"
 						className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition">

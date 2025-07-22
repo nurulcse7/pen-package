@@ -10,8 +10,6 @@ interface User {
 	amount?: number;
 	phone?: number;
 	gender?: string;
-	nid: string;
-	dob: number;
 }
 
 interface UserContextType {

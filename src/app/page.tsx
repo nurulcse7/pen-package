@@ -14,7 +14,7 @@ const RootPage = () => {
 			<HowItWorks />
 			<ReferralSection />
 			<Testimonials />
-			<DownloadApp />
+			{/* <DownloadApp /> */}
 		</div>
 	);
 }

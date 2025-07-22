@@ -2,11 +2,11 @@
 import "@/app/globals.css";
 import { useUser } from "@/context/UserContext";
 import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
 
 import Navbar from "@/components/Shared/UserNavbar/Navbar";
 import UserSidePanel from "@/components/User/UserSidePanel";
 import { Geist_Mono } from "next/font/google";
+import { useRouter } from "next/navigation";
 import Spinner from "@/components/Shared/Spinner/Spinner";
 
 const geistMono = Geist_Mono({
@@ -22,45 +22,30 @@ export default function UserRootLayout({
 	const { user, loading } = useUser();
 	const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
 	const router = useRouter();
-	const pathname = usePathname();
-	const isPrintPage = pathname?.startsWith("/user/land/print");
 
 	useEffect(() => {
-		if (!isPrintPage && !loading && (!user?.email || user?.role !== "user")) {
-			router.push("/login");
+		if (!loading) {
+			if (!user?.email || user?.role !== "user") {
+				router.push("/login");
+			}
 		}
-	}, [user, loading, router, isPrintPage]);
+	}, [user, loading, router]);
 
-	if (!isPrintPage && (loading || !user?.email || user?.role !== "user")) {
+	if (loading || !user?.email || user?.role !== "user") {
 		return <Spinner />;
 	}
-
 	return (
 		<div className={`${geistMono.variable} antialiased`}>
-			{!isPrintPage && (
-				<Navbar
-					setIsSidePanelOpen={setIsSidePanelOpen}
-					isSidePanelOpen={isSidePanelOpen}
-				/>
-			)}
-
-			<main
-				className={`${
-					!isPrintPage && "h-screen overflow-y-hidden flex"
-				} w-full`}>
-				{!isPrintPage && <UserSidePanel isSidePanelOpen={isSidePanelOpen} />}
+			<Navbar
+				setIsSidePanelOpen={setIsSidePanelOpen}
+				isSidePanelOpen={isSidePanelOpen}
+			/>
+			<main className={`${"h-screen overflow-y-hidden flex"} w-full`}>
+				<UserSidePanel isSidePanelOpen={isSidePanelOpen} />
 				<div
-					className={`relative w-full h-full overflow-y-auto ${
-						!isPrintPage && "bg-white pt-[90px] text-black"
-					}`}>
+					className={`relative w-full h-full overflow-auto bg-white pt-[90px] text-black `}
+					style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
 					{children}
-
-					{!isPrintPage && (
-						<p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-md text-gray-500">
-							© {new Date().getFullYear()} সমস্ত স্বত্ব সংরক্ষিত | Service
-							Portal
-						</p>
-					)}
 				</div>
 			</main>
 		</div>

@@ -1,7 +1,10 @@
+"use client";
+import { useSetting } from "@/context/SettingContext";
 import Link from "next/link";
 import { FaFacebookF, FaYoutube, FaWhatsapp } from "react-icons/fa";
 
 const Footer = () => {
+	const { setting } = useSetting();
 	return (
 		<footer className="bg-gray-900 text-gray-300 py-8">
 			<div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -68,8 +71,8 @@ const Footer = () => {
 				</div>
 			</div>
 
-			<div className="text-center text-gray-500 mt-8 text-sm">
-				© {new Date().getFullYear()} ইনকাম প্ল্যাটফর্ম. সর্বস্বত্ব সংরক্ষিত।
+			<div className="text-center text-gray-400 mt-8 text-xl pt-8 border-t border-gray-500">
+				© {new Date().getFullYear()} {setting?.siteName}. সর্বস্বত্ব সংরক্ষিত।
 			</div>
 		</footer>
 	);
