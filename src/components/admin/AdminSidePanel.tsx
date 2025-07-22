@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 const adminLinks = [
 	{ href: "/admin/dashboard", label: "ড্যাশবোর্ড" },
 	{ href: "/admin/users", label: "ইউজার ম্যানেজমেন্ট" },
-	{ href: "/admin/land", label: "ল্যান্ড রেকর্ডস" },
 	{ href: "/admin/payments", label: "পেমেন্টস" },
 	{ href: "/admin/settings", label: "সেটিংস" },
 ];

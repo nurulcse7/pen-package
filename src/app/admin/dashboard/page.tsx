@@ -31,16 +31,13 @@ const Dashboard = () => {
 			</div>
 
 			{/* Stats */}
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8 px-6">
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8 px-6">
 				{/* You will replace hardcoded numbers with dynamic counts */}
 				<div className="bg-white shadow-md rounded-lg p-6 text-center">
 					<h3 className="text-xl font-bold text-gray-700">মোট ইউজার</h3>
 					<p className="text-3xl text-blue-500 mt-2">134</p>
 				</div>
-				<div className="bg-white shadow-md rounded-lg p-6 text-center">
-					<h3 className="text-xl font-bold text-gray-700">মোট জমি</h3>
-					<p className="text-3xl text-green-500 mt-2">56</p>
-				</div>
+
 				<div className="bg-white shadow-md rounded-lg p-6 text-center">
 					<h3 className="text-xl font-bold text-gray-700">পেন্ডিং পেমেন্ট</h3>
 					<p className="text-3xl text-pink-500 mt-2">12</p>

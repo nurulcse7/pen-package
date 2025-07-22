@@ -15,6 +15,7 @@ interface User {
 interface UserContextType {
 	user: User | null;
 	loading: boolean;
+	setUser?:any
 }
 
 const UserContext = createContext<UserContextType>({
@@ -32,8 +33,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 				const user = await baseApi("/auth/me");
 				setUser(user);
 			} catch (error) {
-				console.error("User fetch failed:", error);
 				setUser(null);
+				return error
 			} finally {
 				setLoading(false);
 			}
@@ -43,7 +44,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 	}, []);
 
 	return (
-		<UserContext.Provider value={{ user, loading }}>
+		<UserContext.Provider value={{ user,setUser, loading }}>
 			{children}
 		</UserContext.Provider>
 	);

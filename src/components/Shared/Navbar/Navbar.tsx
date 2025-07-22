@@ -22,7 +22,7 @@ const Navbar = () => {
 		<header className="bg-white shadow-md fixed top-0 left-0 w-full z-50">
 			<div className="container mx-auto px-4 py-3 flex items-center justify-between">
 				{/* Logo */}
-				<Link href="/" className="text-xl font-bold text-blue-600">
+				<Link href="/" className="text-3xl font-bold text-blue-600">
 					{setting?.siteName}
 				</Link>
 

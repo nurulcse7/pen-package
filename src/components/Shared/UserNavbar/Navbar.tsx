@@ -19,7 +19,7 @@ import { toast } from "sonner";
 
 const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 	const { setting } = useSetting();
-	const { user } = useUser();
+	const { user, setUser } = useUser();
 	const router = useRouter();
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -59,7 +59,7 @@ const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 			method: "POST",
 		});
 		if (!response.success) throw new Error(response.message || "Logout failed");
-
+		setUser(null);
 		toast.success(response?.message);
 		router.push(`/login`);
 	};
@@ -80,7 +80,7 @@ const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 						{/* Logo */}
 						<div className="flex justify-center w-full">
 							<Link href="/">
-								<span className="text-xl font-bold text-teal-600 uppercase">
+								<span className="  font-bold text-teal-600  text-3xl">
 									{setting?.siteName}
 								</span>
 							</Link>
@@ -111,9 +111,9 @@ const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 							<input
 								type="text"
 								placeholder="Search"
-								className="border border-gray-300 rounded-md text-black px-3 py-1 pl-4 pr-8 text-sm"
+								className="border-2  border-blue-500  rounded-md text-black px-3 py-2 pl-4 pr-8 text-sm"
 							/>
-							<FiSearch className="absolute right-2 top-2 h-4 w-4 text-gray-500" />
+							<FiSearch className="absolute right-2 top-3 h-4 w-4 text-gray-500" />
 						</div>
 
 						{/* ✅ Mobile 3-dot menu with dropdown */}
@@ -157,10 +157,10 @@ const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 						</div>
 
 						{/* User dropdown - Desktop */}
-						<div className="hidden lg:block relative">
+						<div className="hidden lg:block relative bg-blue-600 rounded p-2 text-white">
 							<button
 								onClick={() => setDropdownOpen(prev => !prev)}
-								className="flex items-center text-gray-700 focus:outline-none">
+								className="flex items-center  focus:outline-none">
 								Hello,{" "}
 								<span className="font-medium ml-1">{user?.fullName}</span>
 								<FiChevronDown className="ml-1 text-sm" />

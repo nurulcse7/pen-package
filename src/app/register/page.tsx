@@ -12,8 +12,6 @@ const Register = () => {
 		email: "",
 		password: "",
 		gender: "",
-		dob: "",
-		nid: "",
 		referral: "",
 	});
 	const [error, setError] = useState("");
@@ -83,7 +81,11 @@ const Register = () => {
 	return (
 		<div className=" flex items-center justify-center bg-gray-100 px-4 pt-18 pb-8">
 			{isSuccess ? (
-				<div className="h-[500px] pt-[20] text-5xl font-bold">{isSuccess}</div>
+				<div className="h-[500px] pt-[20]   font-bold">
+					<div className="max-w-[500]">
+						<h1>{isSuccess}</h1>
+					</div>
+				</div>
 			) : (
 				<div className="bg-white text-gray-700 p-8 rounded-md shadow-md w-full max-w-md">
 					<h1 className="text-3xl font-bold text-center text-gray-700 mb-2">

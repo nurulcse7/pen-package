@@ -51,8 +51,8 @@ const UserSidePanel = ({ isSidePanelOpen }: any) => {
 		<div
 			className={`
 				pt-[90px] w-[300px] fixed lg:static left-0 h-full z-40
-				px-5 py-6 space-y-2 bg-gray-900 shadow rounded-r-2xl
-				transform transition-transform duration-400 ease-in-out
+				px-5 py-6 space-y-2 bg-gradient-to-l from-[#3255ee] to-[#8308ff]  
+				transform transition-transform duration-400 ease-in-out text-xl
 				${isMobile ? "translate-x-0" : ""}
 			`}>
 			{links.map(link => {
@@ -72,7 +72,7 @@ const UserSidePanel = ({ isSidePanelOpen }: any) => {
 								${
 									isActive
 										? "bg-teal-100 text-teal-700"
-										: "text-gray-400 hover:text-teal-700 hover:bg-teal-50"
+										: "text-white hover:text-teal-700 hover:bg-teal-50"
 								}
 							`}>
 							{link.label}
@@ -85,13 +85,13 @@ const UserSidePanel = ({ isSidePanelOpen }: any) => {
 					<div key={link.label}>
 						<button
 							onClick={() => hasSubmenu && toggleMenu(link.label)}
-							className="block w-full text-left px-4 py-2 rounded-md font-medium text-gray-400 hover:text-teal-700 hover:bg-teal-50 transition">
+							className="block   w-full text-left px-4 py-2 rounded-md font-medium text-white hover:text-teal-700 hover:bg-teal-50 transition">
 							{link.label}
 							<span className="float-right">{isSubmenuOpen ? "▾" : "▸"}</span>
 						</button>
 
 						{hasSubmenu && isSubmenuOpen && (
-							<div className="ml-4 space-y-1 mt-1">
+							<div className="text-lg ml-4 space-y-1 mt-1">
 								{link.submenu.map(sublink => {
 									const isSubActive = pathname === sublink.href;
 									return (
@@ -99,11 +99,11 @@ const UserSidePanel = ({ isSidePanelOpen }: any) => {
 											key={sublink.href}
 											href={sublink.href}
 											className={`
-												block px-4 py-2 rounded-md text-sm transition
+												block px-4 py-2 rounded-md  transition
 												${
 													isSubActive
 														? "bg-teal-200 text-teal-800"
-														: "text-gray-400 hover:text-teal-700 hover:bg-teal-50"
+														: "text-white hover:text-teal-700 hover:bg-teal-50"
 												}
 											`}>
 											{sublink.label}

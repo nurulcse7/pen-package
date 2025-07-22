@@ -15,15 +15,15 @@ const Dashboard = () => {
 	return (
 		<div>
 			{/* Page Header */}
-			<div className="pb-[40px] pl-[40px]">
-				<h1 className="text-2xl text-gray-600">Dashboard</h1>
-				<p className="text-gray-500 font-normal capitalize text-md">
+			<div className="mb-[40px] mx-6 px-3 py-6 rounded-md bg-amber-600 text-white">
+				<h1 className="text-2xl md:text-4xl font-semibold ">Dashboard</h1>
+				<p className=" font-normal capitalize text-md">
 					{user?.role} <span className="px-[10px]">/</span> Dashboard
 				</p>
 			</div>
 
 			{/* Welcome Section */}
-			<div className="text-center bg-gradient-to-r from-[#3255ee] to-[#8308ff] py-20 rounded-b-2xl text-white">
+			<div className="text-center m-6 bg-gradient-to-r from-[#3255ee] to-[#8308ff] py-20 rounded-2xl text-white">
 				<h1 className="text-4xl font-bold">Welcome, {user?.fullName}</h1>
 				<p className="text-gray-200 text-xl pt-[20px]">
 					Manage your account, transactions, and services efficiently

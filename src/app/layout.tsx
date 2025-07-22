@@ -25,7 +25,7 @@ export default function RootLayout({
 	return (
 		<html data-arp="" lang="en">
 			<body
-				data-new-gr-c-s-check-loaded="14.1243.0"
+				data-new-gr-c-s-check-loaded="14.1245.0"
 				data-gr-ext-installed=""
 				className={` ${geistMono.variable} antialiased`}>
 				<UserProvider>
