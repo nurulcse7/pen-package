@@ -29,7 +29,10 @@ const Login = () => {
 			}
 		} catch (err: any) {
 			setError(err.message || "Email not verified.");
-			setShowResend(true);
+			if (err?.code === 403) {
+				
+				setShowResend(true);
+			}
 			setLoading(false);
 		}
 	};

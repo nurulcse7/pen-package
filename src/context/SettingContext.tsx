@@ -5,12 +5,9 @@ import { baseApi } from "@/lib/baseApi";
 interface Setting {
 	_id: string;
 	siteName: string;
+	siteUrl: string;
 	supportPhone: string;
 	supportEmail: string;
-	paymentInstructions: string;
-	serviceCharge: number;
-	paymentNumber: string;
-	isPaymentEnabled: boolean;
 	maintenanceMode: boolean;
 	announcement: string;
 }
@@ -36,7 +33,7 @@ export const SettingProvider = ({
 	useEffect(() => {
 		const fetchSetting = async () => {
 			try {
-				const res = await baseApi("/setting");
+				const res = await baseApi("/settings");
 				if (res?.setting) {
 					setSetting(res.setting);
 				}

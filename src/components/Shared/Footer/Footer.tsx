@@ -11,8 +11,8 @@ const Footer = () => {
 				{/* Contact Info */}
 				<div>
 					<h3 className="text-xl font-semibold mb-4 text-white">যোগাযোগ</h3>
-					<p>ইমেল: support@example.com</p>
-					<p>ফোন: +880 1234 567890</p>
+					<p>ইমেল: {setting?.supportEmail}</p>
+					<p>ফোন: {setting?.supportPhone}</p>
 					<p>ঠিকানা: ঢাকা, বাংলাদেশ</p>
 				</div>
 

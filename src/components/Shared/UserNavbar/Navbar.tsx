@@ -1,7 +1,9 @@
+"use client";
+
+import Link from "next/link";
 import { useSetting } from "@/context/SettingContext";
 import { useUser } from "@/context/UserContext";
 import { baseApi } from "@/lib/baseApi";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import {
@@ -24,9 +26,8 @@ const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement | null>(null);
-	const mobileMenuRef = useRef<HTMLDivElement | null>(null); // added
+	const mobileMenuRef = useRef<HTMLDivElement | null>(null);
 
-	// ✅ Desktop dropdown outside click
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (
@@ -35,14 +36,6 @@ const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 			) {
 				setDropdownOpen(false);
 			}
-		};
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, []);
-
-	// ✅ Mobile menu outside click
-	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
 			if (
 				mobileMenuRef.current &&
 				!mobileMenuRef.current.contains(event.target as Node)
@@ -55,81 +48,73 @@ const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 	}, []);
 
 	const handleLogout = async () => {
-		const response = await baseApi("/auth/logout", {
-			method: "POST",
-		});
+		const response = await baseApi("/auth/logout", { method: "POST" });
 		if (!response.success) throw new Error(response.message || "Logout failed");
 		setUser(null);
 		toast.success(response?.message);
-		router.push(`/login`);
+		router.push("/login");
 	};
 
 	return (
-		<nav className="fixed top-0 left-0 right-0 bg-white shadow z-50">
-			<div className="px-4 sm:px-6 lg:px-12">
-				<div className="flex items-center justify-between h-16">
-					{/* Left side */}
-					<div className="flex items-center lg:w-auto w-full space-x-3">
-						{/* Hamburger */}
+		<nav className="fixed py-1 top-0 left-0 right-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600  z-50">
+			<div className="px-4 sm:px-6 lg:px-10">
+				<div className="flex justify-between items-center h-16">
+					{/* Left */}
+					<div className="flex items-center gap-4">
+						{/* Toggle for mobile */}
 						<button
 							onClick={() => setIsSidePanelOpen((prev: boolean) => !prev)}
-							className="lg:hidden text-gray-700 text-xl">
+							className="lg:hidden text-white text-2xl">
 							{isSidePanelOpen ? <RxCross1 /> : <FiMenu />}
 						</button>
 
 						{/* Logo */}
-						<div className="flex justify-center w-full">
-							<Link href="/">
-								<span className="  font-bold text-teal-600  text-3xl">
-									{setting?.siteName ? (
-										<>{setting?.siteName}</>
-									) : (
-										"eLearning Portal"
-									)}
-								</span>
-							</Link>
-						</div>
+						<Link href="/">
+							<span className="font-extrabold text-white text-2xl">
+								{setting?.siteName || "Dashboard"}
+							</span>
+						</Link>
 					</div>
 
-					{/* Notification & balance - Desktop only */}
-					{user?.role !== "admin" && (
-						<div className="hidden lg:flex items-center space-x-4">
+					{/* Middle - Search bar */}
+					<div className="hidden lg:flex relative w-1/3">
+						<input
+							type="text"
+							placeholder="Search anything..."
+							className="w-full px-4 py-2 rounded-md text-sm bg-white bg-opacity-20 backdrop-blur-md  placeholder-opacity-60 border border-white border-opacity-20 focus:outline-none focus:ring-2 focus:ring-white"
+						/>
+						<FiSearch className="absolute right-3 top-3  opacity-70" />
+					</div>
+
+					{/* Right */}
+					<div className="flex items-center space-x-4 relative ">
+						{/* Notification */}
+						{user?.role && (
 							<div className="relative">
-								<FiBell className="text-gray-600 h-5 w-5" />
-								<span className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs rounded-full px-1">
+								<FiBell className="h-5 w-5 text-white" />
+								<span className="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs font-bold rounded-full px-1">
 									0
 								</span>
 							</div>
-							<span className="text-green-600 font-medium">
-								Balance : {user?.amount}
-							</span>
-						</div>
-					)}
+						)}
 
-					{/* Right side */}
-					<div
-						className="flex items-center space-x-4 relative"
-						ref={dropdownRef}>
-						{/* Search - Desktop */}
-						<div className="relative hidden lg:block">
-							<input
-								type="text"
-								placeholder="Search"
-								className="border-2  border-blue-500  rounded-md text-black px-3 py-2 pl-4 pr-8 text-sm"
-							/>
-							<FiSearch className="absolute right-2 top-3 h-4 w-4 text-gray-500" />
-						</div>
+						{/* Balance */}
+						{user?.role && (
+							<div className="hidden lg:block bg-white bg-opacity-10 px-3 py-1 rounded-md text-sm">
+								৳ {user?.amount || 0}
+							</div>
+						)}
 
-						{/* ✅ Mobile 3-dot menu with dropdown */}
+						{/* Mobile Menu */}
 						<div className="block lg:hidden relative" ref={mobileMenuRef}>
 							<FiMoreVertical
-								className="text-xl text-gray-700 cursor-pointer"
 								onClick={() => setMobileMenuOpen(prev => !prev)}
+								className="text-xl cursor-pointer text-white"
 							/>
 							{mobileMenuOpen && (
-								<div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
-									<ul className="py-2 text-sm text-gray-700">
-										{user?.role !== "admin" && (
+								<div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-md z-50">
+									<ul className="py-2 text-sm">
+										{user?.role && (
 											<li className="px-4 py-2 text-green-600 font-medium border-b">
 												Balance: {user?.amount}৳
 											</li>
@@ -138,21 +123,21 @@ const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 											<Link
 												href={`/${user?.role}/profile`}
 												className="flex items-center px-4 py-2 hover:bg-gray-100">
-												<FiUser className="mr-2" /> Profile
+												<FiUser className="mr-2" /> প্রোফাইল
 											</Link>
 										</li>
 										<li>
-											<a
+											<Link
 												href="#"
 												className="flex items-center px-4 py-2 hover:bg-gray-100">
-												<FiSettings className="mr-2" /> Settings
-											</a>
+												<FiSettings className="mr-2" /> সেটিংস
+											</Link>
 										</li>
 										<li>
 											<button
 												onClick={handleLogout}
-												className="w-full cursor-pointer flex items-center px-4 py-2 hover:bg-gray-100 text-red-600">
-												<FiLogOut className="mr-2" /> Logout
+												className="w-full flex items-center px-4 py-2 text-red-600 hover:bg-gray-100">
+												<FiLogOut className="mr-2" /> লগআউট
 											</button>
 										</li>
 									</ul>
@@ -160,38 +145,39 @@ const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 							)}
 						</div>
 
-						{/* User dropdown - Desktop */}
-						<div className="hidden lg:block relative bg-blue-600 rounded p-2 text-white">
+						{/* User Dropdown - Desktop */}
+						<div className="hidden lg:block relative" ref={dropdownRef}>
 							<button
 								onClick={() => setDropdownOpen(prev => !prev)}
-								className="flex items-center  focus:outline-none">
-								Hello,{" "}
-								<span className="font-medium ml-1">{user?.fullName}</span>
-								<FiChevronDown className="ml-1 text-sm" />
+								className="flex items-center bg-white bg-opacity-10 px-4 py-2 rounded-md hover:bg-opacity-20 transition-all duration-200">
+								<span className="mr-2">
+									Hi, {user?.fullName?.split(" ")[0]}
+								</span>
+								<FiChevronDown />
 							</button>
 
 							{dropdownOpen && (
-								<div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
+								<div className="absolute right-0 mt-2 w-52 bg-white rounded-md shadow-md z-50 backdrop-blur-md">
 									<ul className="py-2 text-sm text-gray-700">
 										<li>
 											<Link
 												href={`/${user?.role}/profile`}
 												className="flex items-center px-4 py-2 hover:bg-gray-100">
-												<FiUser className="mr-2" /> Profile
+												<FiUser className="mr-2" /> প্রোফাইল
 											</Link>
 										</li>
 										<li>
-											<a
+											<Link
 												href="#"
 												className="flex items-center px-4 py-2 hover:bg-gray-100">
-												<FiSettings className="mr-2" /> Settings
-											</a>
+												<FiSettings className="mr-2" /> সেটিংস
+											</Link>
 										</li>
 										<li>
 											<button
 												onClick={handleLogout}
-												className="w-full cursor-pointer flex items-center px-4 py-2 hover:bg-gray-100 text-red-600">
-												<FiLogOut className="mr-2" /> Logout
+												className="w-full flex items-center px-4 py-2 text-red-600 hover:bg-gray-100">
+												<FiLogOut className="mr-2" /> লগআউট
 											</button>
 										</li>
 									</ul>

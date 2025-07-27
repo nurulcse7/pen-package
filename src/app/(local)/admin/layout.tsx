@@ -2,19 +2,19 @@
 import "@/app/globals.css";
 import { useUser } from "@/context/UserContext";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import Navbar from "@/components/Shared/UserNavbar/Navbar";
-import UserSidePanel from "@/components/User/UserSidePanel";
 import { Geist_Mono } from "next/font/google";
-import { useRouter } from "next/navigation";
 import Spinner from "@/components/Shared/Spinner/Spinner";
+import AdminSidePanel from "@/components/admin/AdminSidePanel";
 
 const geistMono = Geist_Mono({
 	variable: "--font-geist-mono",
 	subsets: ["latin"],
 });
 
-export default function UserRootLayout({
+export default function AdminRootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
@@ -25,25 +25,31 @@ export default function UserRootLayout({
 
 	useEffect(() => {
 		if (!loading) {
-			if (!user?.email || user?.role !== "user") {
+			if (!user?.email || user?.role !== "admin") {
 				router.push("/login");
 			}
 		}
 	}, [user, loading, router]);
 
-	if (loading || !user?.email || user?.role !== "user") {
+	if (loading || !user?.email || user?.role !== "admin") {
 		return <Spinner />;
 	}
+
 	return (
 		<div className={`${geistMono.variable} antialiased`}>
+			<title>Admin Dashboard | Pen Packaging</title>
 			<Navbar
 				setIsSidePanelOpen={setIsSidePanelOpen}
 				isSidePanelOpen={isSidePanelOpen}
 			/>
-			<main className={`${"h-screen overflow-y-hidden flex"} w-full`}>
-				<UserSidePanel isSidePanelOpen={isSidePanelOpen} />
+
+			<main className=" h-screen overflow-y-hidden flex w-full">
+				<AdminSidePanel
+					isSidePanelOpen={isSidePanelOpen}
+					setIsSidePanelOpen={setIsSidePanelOpen}
+				/>
 				<div
-					className={`relative w-full h-full overflow-auto bg-white pt-[90px] text-black `}
+					className="bg-white pt-[90px] text-black w-full h-full overflow-y-auto"
 					style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
 					{children}
 				</div>
