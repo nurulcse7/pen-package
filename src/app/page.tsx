@@ -7,6 +7,7 @@ import WhyChooseUs from '@/components/Home/WhyChooseUs';
 import React from 'react'
 
 const RootPage = () => {
+	
   return (
 		<div>
 			<HeroSection />

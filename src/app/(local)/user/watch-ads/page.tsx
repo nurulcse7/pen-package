@@ -3,16 +3,18 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import ReactPlayer from "react-player";
+import { useUser } from "@/context/UserContext";
+import { baseApi } from "@/lib/baseApi";
 
 const ads = [
 	{
-		id: 1,
+		id: 112,
 		title: "নতুন পণ্যের বিজ্ঞাপন",
 		videoUrl: "https://youtu.be/jCVjudmnByk?si=fNoDxIEJx8QyPGJX",
 		reward: 2,
 	},
 	{
-		id: 2,
+		id: 23,
 		title: "ডিসকাউন্ট অফার বিজ্ঞাপন",
 		videoUrl: "https://youtu.be/jCVjudmnByk?si=fNoDxIEJx8QyPGJX",
 		reward: 3,
@@ -20,6 +22,7 @@ const ads = [
 ];
 
 export default function WatchAdsPage() {
+	const { user, setUser } = useUser();
 	const [watchedIds, setWatchedIds] = useState<number[]>([]);
 	const [currentAd, setCurrentAd] = useState<any | null>(null);
 	const [earned, setEarned] = useState(0);
@@ -29,14 +32,28 @@ export default function WatchAdsPage() {
 		setCurrentAd(nextAd || null);
 	}, [watchedIds]);
 
-	const handleAdComplete = () => {
-		if (!currentAd) return;
+	const handleAdComplete = async (id: number) => {
+		if (!watchedIds.includes(id)) {
+			const video = ads.find(v => v.id === id);
+			if (!video) return;
 
-		toast.success(`✅ ${currentAd.reward} টাকা ইনকাম হয়েছে!`);
-		setEarned(prev => prev + currentAd.reward);
-		setWatchedIds(prev => [...prev, currentAd.id]);
+			try {
+				const res = await baseApi("/videos/video-complete", {
+					method: "POST",
+					body: { videoId: id, title: video?.title, reward: video.reward },
+				});
+
+				if (!res.success) throw new Error();
+
+				setUser({ ...user, balance: res.newBalance });
+				setEarned(earned + video?.reward);
+				setWatchedIds(prev => [...prev, id]);
+				toast.success("🎉 ভিডিও দেখেছেন! ইনকাম যুক্ত হয়েছে।");
+			} catch (error: any) {
+				toast.error(error?.message || "ইনকাম আপডেট করতে সমস্যা হয়েছে।");
+			}
+		}
 	};
-
 	return (
 		<div className="max-w-xl mx-auto py-10 px-4 text-center">
 			<h1 className="text-3xl font-bold text-indigo-700 mb-4">
@@ -56,7 +73,7 @@ export default function WatchAdsPage() {
 							src={currentAd.videoUrl}
 							controls
 							width="100%"
-							onEnded={handleAdComplete}
+							onEnded={() => handleAdComplete(currentAd?.id)}
 						/>
 						<p className="mt-2 text-green-600 font-medium">
 							🎁 এই বিজ্ঞাপনের ইনকাম: {currentAd.reward} টাকা

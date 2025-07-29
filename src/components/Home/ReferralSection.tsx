@@ -1,7 +1,10 @@
+"use client"
 import { FaUsers, FaShareAlt, FaGift } from "react-icons/fa";
 import Link from "next/link";
+import { useUser } from "@/context/UserContext";
 
 const ReferralSection = () => {
+	const { user } = useUser();
 	return (
 		<section className="py-12 bg-white">
 			<div className="container mx-auto px-4">
@@ -46,11 +49,21 @@ const ReferralSection = () => {
 				</div>
 
 				<div className="text-center">
-					<Link
-						href="/register"
-						className="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition">
-						এখনই রেজিস্টার করে রেফার করুন
-					</Link>
+					{user?.role && user?.email ? (
+						<>
+							<Link
+								href={`/${user?.role}/dashboard`}
+								className="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition">
+								কাজ শুরু করুন
+							</Link>
+						</>
+					) : (
+						<Link
+							href="/register"
+							className="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition">
+							এখনই রেজিস্টার করে রেফার করুন
+						</Link>
+					)}
 				</div>
 			</div>
 		</section>

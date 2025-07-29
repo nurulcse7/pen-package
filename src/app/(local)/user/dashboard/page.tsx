@@ -3,6 +3,7 @@
 import Spinner from "@/components/Shared/Spinner/Spinner";
 import { useUser } from "@/context/UserContext";
 import { useSetting } from "@/context/SettingContext";
+import Link from "next/link";
 
 const Dashboard = () => {
 	const { user, loading } = useUser();
@@ -75,20 +76,30 @@ const Dashboard = () => {
 				</p>
 			</div>
 
-			{/* 🚀 Quick Actions */}
 			<div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-10 px-6">
-				<button className="bg-[#667eea] text-white py-3 rounded-lg font-semibold">
-					🎥 ভিডিও দেখুন
-				</button>
-				<button className="bg-[#764ba2] text-white py-3 rounded-lg font-semibold">
-					📢 অ্যাড দেখুন
-				</button>
-				<button className="bg-[#f6ad55] text-white py-3 rounded-lg font-semibold">
-					📝 কাজ জমা দিন
-				</button>
-				<button className="bg-[#38b2ac] text-white py-3 rounded-lg font-semibold">
-					💳 টাকা তুলুন
-				</button>
+				<Link href="/user/watch-video" passHref>
+					<button className="w-full bg-[#667eea] text-white py-3 rounded-lg font-semibold">
+						🎥 ভিডিও দেখুন
+					</button>
+				</Link>
+
+				<Link href="/user/watch-ads" passHref>
+					<button className="w-full bg-[#764ba2] text-white py-3 rounded-lg font-semibold">
+						📢 অ্যাড দেখুন
+					</button>
+				</Link>
+
+				<Link href="/user/packaging/submit-work" passHref>
+					<button className="w-full bg-[#f6ad55] text-white py-3 rounded-lg font-semibold">
+						📝 কাজ জমা দিন
+					</button>
+				</Link>
+
+				<Link href="/user/earnings" passHref>
+					<button className="w-full bg-[#38b2ac] text-white py-3 rounded-lg font-semibold">
+						💳 টাকা তুলুন
+					</button>
+				</Link>
 			</div>
 
 			{/* 🎁 Bonus or Offer */}

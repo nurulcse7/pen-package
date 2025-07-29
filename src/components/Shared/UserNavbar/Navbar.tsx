@@ -101,7 +101,7 @@ const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 						{/* Balance */}
 						{user?.role && (
 							<div className="hidden lg:block bg-white bg-opacity-10 px-3 py-1 rounded-md text-sm">
-								৳ {user?.amount || 0}
+								৳ {user?.balance || 0}
 							</div>
 						)}
 
@@ -116,7 +116,7 @@ const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 									<ul className="py-2 text-sm">
 										{user?.role && (
 											<li className="px-4 py-2 text-green-600 font-medium border-b">
-												Balance: {user?.amount}৳
+												Balance: {user?.balance}৳
 											</li>
 										)}
 										<li>

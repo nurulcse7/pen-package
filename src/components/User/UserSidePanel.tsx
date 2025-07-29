@@ -6,15 +6,13 @@ import { useEffect, useState } from "react";
 
 const links = [
 	{ href: "/user/dashboard", label: "ড্যাশবোর্ড" },
-
 	{
 		label: "প্যাকেজিং কাজ",
 		submenu: [
 			{ href: "/user/packaging/rules", label: "প্যাকেজিং নিয়মাবলী" },
-			{ href: "/user/packaging/submit", label: "কাজ জমা দিন" },
+			{ href: "/user/packaging/submit-work", label: "কাজ জমা দিন" },
 		],
 	},
-
 	{ href: "/user/watch-video", label: "ভিডিও দেখুন" },
 	{ href: "/user/watch-ads", label: "অ্যাড দেখুন" },
 	{
@@ -40,6 +38,18 @@ const UserSidePanel = ({ isSidePanelOpen }: any) => {
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
+	// ✅ Auto-open submenu if current path matches any of its children
+	useEffect(() => {
+		const newOpenMenus: { [key: string]: boolean } = {};
+		links.forEach(link => {
+			if (link.submenu) {
+				const match = link.submenu.some(sub => pathname.startsWith(sub.href));
+				if (match) newOpenMenus[link.label] = true;
+			}
+		});
+		setOpenMenus(newOpenMenus);
+	}, [pathname]);
+
 	const toggleMenu = (label: string) => {
 		setOpenMenus(prev => ({ ...prev, [label]: !prev[label] }));
 	};
@@ -59,6 +69,8 @@ const UserSidePanel = ({ isSidePanelOpen }: any) => {
 				const isSimpleLink = !!link.href;
 				const hasSubmenu = !!link.submenu;
 				const isSubmenuOpen = openMenus[link.label];
+				const isSubmenuActive =
+					hasSubmenu && link.submenu?.some(s => pathname.startsWith(s.href));
 
 				// ✅ For normal links
 				if (isSimpleLink) {
@@ -80,12 +92,19 @@ const UserSidePanel = ({ isSidePanelOpen }: any) => {
 					);
 				}
 
-				// ✅ For section like "Packaging"
+				// ✅ For dropdown with submenu
 				return (
 					<div key={link.label}>
 						<button
-							onClick={() => hasSubmenu && toggleMenu(link.label)}
-							className="block   w-full text-left px-4 py-2 rounded-md font-medium text-white hover:text-teal-700 hover:bg-teal-50 transition">
+							onClick={() => toggleMenu(link.label)}
+							className={`
+								block w-full text-left px-4 py-2 rounded-md font-medium transition
+								${
+									isSubmenuActive
+										? "bg-teal-100 text-teal-700"
+										: "text-white hover:text-teal-700 hover:bg-teal-50"
+								}
+							`}>
 							{link.label}
 							<span className="float-right">{isSubmenuOpen ? "▾" : "▸"}</span>
 						</button>
@@ -93,13 +112,13 @@ const UserSidePanel = ({ isSidePanelOpen }: any) => {
 						{hasSubmenu && isSubmenuOpen && (
 							<div className="text-lg ml-4 space-y-1 mt-1">
 								{link.submenu.map(sublink => {
-									const isSubActive = pathname === sublink.href;
+									const isSubActive = pathname.startsWith(sublink.href);
 									return (
 										<Link
 											key={sublink.href}
 											href={sublink.href}
 											className={`
-												block px-4 py-2 rounded-md  transition
+												block px-4 py-2 rounded-md transition
 												${
 													isSubActive
 														? "bg-teal-200 text-teal-800"

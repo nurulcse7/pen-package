@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useUser } from "@/context/UserContext";
 
 const HeroSection = () => {
+	const {user}=useUser()
 	return (
 		<section className="bg-gradient-to-r from-blue-100 to-blue-400 py-12 mt-16">
 			<div className="container mx-auto px-4 flex flex-col-reverse md:flex-row items-center justify-between gap-8">
@@ -17,11 +19,21 @@ const HeroSection = () => {
 						কাজ শিখুন, কাজ করুন এবং রেফার করে বাড়ান আপনার ইনকাম — একদম সহজ
 						উপায়ে।
 					</p>
-					<Link
-						href="/register"
-						className="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition">
-						আজই রেজিস্টার করুন
-					</Link>
+					{user?.role && user?.email ? (
+						<>
+							<Link
+								href={`/${user?.role}/dashboard`}
+								className="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition">
+								কাজ শুরু করুন
+							</Link>
+						</>
+					) : (
+						<Link
+							href="/register"
+							className="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition">
+							আজই রেজিস্টার করুন
+						</Link>
+					)}
 				</div>
 
 				{/* Right Image */}

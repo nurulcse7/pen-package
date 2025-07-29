@@ -6,11 +6,11 @@ import { toast } from "sonner";
 
 export default function MyEarningsPage() {
 	const { user } = useUser();
-	const [balance, setBalance] = useState(user?.amount as number); // উদাহরণস্বরূপ ব্যালেন্স ১৫০ টাকা
+	const [balance, setBalance] = useState(user?.balance as number);  
 	const [withdrawAmount, setWithdrawAmount] = useState("");
 	const [loading, setLoading] = useState(false);
 
-	const MIN_BALANCE = 500;
+	const MIN_BALANCE = 100;
 
 	const handleWithdraw = async (e: React.FormEvent) => {
 		e.preventDefault();

@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useUser } from "@/context/UserContext";
+import { baseApi } from "@/lib/baseApi";
+import { useState } from "react";
 import ReactPlayer from "react-player";
 import { toast } from "sonner";
 
@@ -14,22 +16,37 @@ const videos = [
 	{
 		id: 2,
 		title: "প্যাকেজিং টিপস ভিডিও",
-		url: "https://youtu.be/jCVjudmnByk?si=fNoDxIEJx8QyPGJX",
+		url: "https://youtu.be/cUmUOb7j3dc?si=bt91MOnBYTiAkg_X",
 		reward: 3,
 	},
 ];
 
 export default function WatchVideoPage() {
+	const { user, setUser } = useUser();
 	const [watched, setWatched] = useState<number[]>([]);
 
-	const handleComplete = (id: number) => {
+	const handleComplete = async (id: number) => {
 		if (!watched.includes(id)) {
-			setWatched(prev => [...prev, id]);
-			toast.success("🎉 ভিডিও দেখেছেন! ইনকাম যুক্ত হয়েছে।");
+			const video = videos.find(v => v.id === id);
+			if (!video) return;
+
+			try {
+				const res = await baseApi("/videos/video-complete", {
+					method: "POST",
+					body: { videoId: id, title: video?.title, reward: video.reward },
+				});
+
+				if (!res.success) throw new Error();
+
+				setUser({ ...user, balance: res.newBalance });
+				setWatched(prev => [...prev, id]);
+				toast.success("🎉 ভিডিও দেখেছেন! ইনকাম যুক্ত হয়েছে।");
+			} catch (error: any) {
+				toast.error(error?.message || "ইনকাম আপডেট করতে সমস্যা হয়েছে।");
+			}
 		}
 	};
 
-	// মোট ইনকাম হিসাব
 	const totalIncome = watched.reduce((sum, id) => {
 		const video = videos.find(v => v.id === id);
 		return video ? sum + video.reward : sum;
@@ -49,26 +66,36 @@ export default function WatchVideoPage() {
 				</div>
 			) : (
 				<div className="space-y-8">
-					{videos.map(video =>
-						watched.includes(video.id) ? null : (
-							<div key={video.id} className="bg-white rounded shadow p-4">
-								<h3 className="text-xl font-semibold mb-2">{video.title}</h3>
-								<ReactPlayer
-									src={video.url}
-									controls
-									width="100%"
-									onEnded={() => handleComplete(video.id)}
-								/>
-								<p className="mt-2 text-green-700">
-									🎁 এই ভিডিও ইনকাম: {video.reward} টাকা
-								</p>
-							</div>
-						)
-					)}
+					{videos.map(video => (
+						<div
+							key={video.id}
+							className="bg-white rounded shadow p-4 relative">
+							<h3 className="text-xl font-semibold mb-2 flex items-center justify-between">
+								{video.title}
+
+								{watched.includes(video.id) && (
+									<span className="text-green-700 font-bold">
+										Completed - Earned: {video.reward} টাকা
+									</span>
+								)}
+							</h3>
+
+							{!watched.includes(video.id) && (
+								<div className="h-[400px]">
+									<ReactPlayer
+										src={video.url}
+										controls
+										height="100%"
+										width="100%"
+										onEnded={() => handleComplete(video.id)}
+									/>
+								</div>
+							)}
+						</div>
+					))}
 				</div>
 			)}
 
-			{/* মোট ইনকাম দেখানো */}
 			<p className="mt-8 text-center text-lg font-semibold text-indigo-700">
 				মোট ইনকাম: {totalIncome} টাকা
 			</p>

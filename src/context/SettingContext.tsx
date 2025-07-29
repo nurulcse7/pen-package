@@ -14,6 +14,7 @@ interface Setting {
 
 interface SettingContextType {
 	setting: Setting | null;
+	setSetting?: any;
 	loading: boolean;
 }
 
@@ -49,7 +50,7 @@ export const SettingProvider = ({
 	}, []);
 
 	return (
-		<SettingContext.Provider value={{ setting, loading }}>
+		<SettingContext.Provider value={{setSetting, setting, loading }}>
 			{children}
 		</SettingContext.Provider>
 	);

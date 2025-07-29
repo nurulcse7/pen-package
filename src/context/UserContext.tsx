@@ -6,9 +6,10 @@ interface User {
 	fullName: string;
 	email: string;
 	role: string;
-	amount?: number;
-	phone?: number;
-	gender?: string;
+	balance: number;
+	phone: number;
+	gender: string;
+	referralId: any;
 }
 
 interface UserContextType {

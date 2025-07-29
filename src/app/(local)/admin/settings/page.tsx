@@ -18,7 +18,7 @@ type GeneralSetting = {
 };
 
 export default function GeneralSettings() {
-	const { setting, loading } = useSetting();
+	const { setSetting, setting, loading } = useSetting();
 	const [settings, setSettings] = useState<GeneralSetting>({
 		siteName: "",
 		siteUrl: "",
@@ -55,6 +55,7 @@ export default function GeneralSettings() {
 				body: settings,
 			});
 			if (!res.success) throw new Error();
+			setSetting(settings);
 			toast.success("সেটিংস আপডেট সফল হয়েছে");
 		} catch (err) {
 			toast.error("সেটিংস আপডেট ব্যর্থ হয়েছে");
