@@ -7,7 +7,7 @@ import { toast } from "sonner";
 type User = {
 	_id: string;
 	fullName: string;
-	amount: number;
+	balance: number;
 	phone: number;
 	email: string;
 	role: string;
@@ -66,7 +66,7 @@ export default function AllUsersPage() {
 						{users.map(user => (
 							<tr key={user._id}>
 								<td className="px-4 py-2">{user.fullName}</td>
-								<td className="px-4 py-2">৳ {user?.amount}</td>
+								<td className="px-4 py-2">৳ {user?.balance}</td>
 								<td className="px-4 py-2">{user?.phone}</td>
 								<td className="px-4 py-2">{user.email}</td>
 								<td className="px-4 py-2 capitalize">

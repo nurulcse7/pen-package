@@ -10,6 +10,7 @@ interface Setting {
 	supportEmail: string;
 	maintenanceMode: boolean;
 	announcement: string;
+	referralBonus: Number;
 }
 
 interface SettingContextType {
@@ -50,7 +51,7 @@ export const SettingProvider = ({
 	}, []);
 
 	return (
-		<SettingContext.Provider value={{setSetting, setting, loading }}>
+		<SettingContext.Provider value={{ setSetting, setting, loading }}>
 			{children}
 		</SettingContext.Provider>
 	);

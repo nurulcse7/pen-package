@@ -8,13 +8,13 @@ import { toast } from "sonner";
 
 const videos = [
 	{
-		id: 1,
+		id: 1111,
 		title: "কাজ শেখার ভিডিও #১",
 		url: "https://youtu.be/jCVjudmnByk?si=fNoDxIEJx8QyPGJX",
 		reward: 5,
 	},
 	{
-		id: 2,
+		id: 211,
 		title: "প্যাকেজিং টিপস ভিডিও",
 		url: "https://youtu.be/cUmUOb7j3dc?si=bt91MOnBYTiAkg_X",
 		reward: 3,
@@ -78,6 +78,9 @@ export default function WatchVideoPage() {
 										Completed - Earned: {video.reward} টাকা
 									</span>
 								)}
+								<p className="mt-2 text-green-600 font-medium">
+									🎁 এই ভিডিও ইনকাম: {video.reward} টাকা
+								</p>
 							</h3>
 
 							{!watched.includes(video.id) && (

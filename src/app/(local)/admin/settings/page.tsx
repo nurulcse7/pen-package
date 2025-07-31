@@ -11,10 +11,8 @@ type GeneralSetting = {
 	supportPhone: string;
 	supportEmail: string;
 	announcement: string;
-	maintenanceMode?: string;
+	maintenanceMode?: boolean;
 	referralBonus: number;
-	videoBonus: number;
-	adBonus: number;
 };
 
 export default function GeneralSettings() {
@@ -25,19 +23,19 @@ export default function GeneralSettings() {
 		supportPhone: "",
 		supportEmail: "",
 		announcement: "",
-		maintenanceMode: "",
+		maintenanceMode: false,
 		referralBonus: 0,
-		videoBonus: 0,
-		adBonus: 0,
 	});
 
 	useEffect(() => {
 		if (setting) {
-			setSettings(setting);
+			setSettings({
+				...setting,
+				referralBonus: Number(setting.referralBonus),
+			});
 		}
 	}, [setting]);
 
-	// এখানে onChange কে সঠিকভাবে handle করলাম
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) => {
@@ -61,6 +59,13 @@ export default function GeneralSettings() {
 			toast.error("সেটিংস আপডেট ব্যর্থ হয়েছে");
 		}
 	};
+	const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, checked } = e.target;
+		setSettings(prev => ({
+			...prev,
+			[name]: checked,
+		}));
+	};
 
 	if (loading) return <p className="text-center mt-10">লোড হচ্ছে...</p>;
 
@@ -80,7 +85,7 @@ export default function GeneralSettings() {
 						<input
 							type="text"
 							name={name}
-							value={settings[name as keyof GeneralSetting] || ""}
+							value={String(settings[name as keyof GeneralSetting] ?? "")}
 							onChange={handleChange}
 							className="w-full border border-gray-300 rounded px-3 py-2"
 						/>
@@ -97,23 +102,38 @@ export default function GeneralSettings() {
 						className="w-full border border-gray-300 rounded px-3 py-2"
 					/>
 				</div>
-				<h2 className="text-2xl font-bold mb-4">🎁 বোনাস সেটিংস</h2>
-				{[
-					{ label: "রেফারেল বোনাস (৳)", name: "referralBonus" },
-					{ label: "ভিডিও দেখা বোনাস (৳)", name: "videoBonus" },
-					{ label: "অ্যাড দেখা বোনাস (৳)", name: "adBonus" },
-				].map(({ label, name }) => (
-					<div key={name}>
-						<label className="block font-medium mb-1">{label}</label>
-						<input
-							type="text"
-							name={name}
-							value={settings[name as keyof GeneralSetting] || ""}
-							onChange={handleChange}
-							className="w-full border border-gray-300 rounded px-3 py-2"
-						/>
-					</div>
-				))}
+				{/* Maintenance Mode Checkbox */}
+				<div className="flex items-center space-x-3">
+					<input
+						type="checkbox"
+						id="maintenanceMode"
+						name="maintenanceMode"
+						checked={settings.maintenanceMode || false}
+						onChange={handleCheckboxChange}
+						className="h-5 w-5"
+					/>
+					<label htmlFor="maintenanceMode" className="font-medium">
+						🔧
+						{!settings?.maintenanceMode
+							? "Maintenance Mode চালু করুন"
+							: "Maintenance Mode চালু রয়েছে"}
+					</label>
+				</div>
+				<h2 className="text-2xl font-bold mb-4 pt-5">🎁 বোনাস সেটিংস</h2>
+				{[{ label: "রেফারেল বোনাস (৳)", name: "referralBonus" }].map(
+					({ label, name }) => (
+						<div key={name}>
+							<label className="block font-medium mb-1">{label}</label>
+							<input
+								type="text"
+								name={name}
+								value={String(settings[name as keyof GeneralSetting] ?? "")}
+								onChange={handleChange}
+								className="w-full border border-gray-300 rounded px-3 py-2"
+							/>
+						</div>
+					)
+				)}
 				<button
 					onClick={handleSubmit}
 					className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded">

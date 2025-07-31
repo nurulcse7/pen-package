@@ -78,6 +78,25 @@ const AdminDashboard = () => {
 				/>
 			</div>
 
+			{/* Content Management Quick Links */}
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 px-6">
+				<QuickLink
+					title="ভিডিও ম্যানেজমেন্ট"
+					description="ভিডিও যোগ, এডিট ও মুছুন"
+					href="/admin/manage/videos"
+				/>
+				<QuickLink
+					title="অ্যাড ম্যানেজমেন্ট"
+					description="অ্যাড যোগ, এডিট ও মুছুন"
+					href="/admin/manage/ads"
+				/>
+				<QuickLink
+					title="পেন প্যাকেজ ম্যানেজমেন্ট"
+					description="প্যাকেজ তৈরি ও কন্ট্রোল করুন"
+					href="/admin/manage/pen-packages"
+				/>
+			</div>
+
 			{/* Notice Area */}
 			<div className="bg-red-50 border border-red-200 text-red-800 mt-12 mx-6 rounded-lg p-6">
 				<h3 className="text-lg font-bold mb-1">⚠️ গুরুত্বপূর্ণ বিজ্ঞপ্তি:</h3>
@@ -116,7 +135,7 @@ const QuickLink = ({
 }) => (
 	<Link
 		href={href}
-		className="bg-white border hover:shadow-lg transition p-6 rounded-lg shadow text-gray-800">
+		className="bg-white border border-gray-300 hover:shadow-lg transition p-6 rounded-lg shadow text-gray-800">
 		<h3 className="text-xl font-semibold mb-1">{title}</h3>
 		<p className="text-sm text-gray-500">{description}</p>
 	</Link>

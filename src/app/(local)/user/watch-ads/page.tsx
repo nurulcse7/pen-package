@@ -8,15 +8,15 @@ import { baseApi } from "@/lib/baseApi";
 
 const ads = [
 	{
-		id: 112,
+		id: 111,
 		title: "নতুন পণ্যের বিজ্ঞাপন",
-		videoUrl: "https://youtu.be/jCVjudmnByk?si=fNoDxIEJx8QyPGJX",
+		videoUrl: "https://youtu.be/GQy3mSk3l28?si=ja6U1Eylt2gVqI_5",
 		reward: 2,
 	},
 	{
-		id: 23,
+		id: 121,
 		title: "ডিসকাউন্ট অফার বিজ্ঞাপন",
-		videoUrl: "https://youtu.be/jCVjudmnByk?si=fNoDxIEJx8QyPGJX",
+		videoUrl: "https://youtu.be/q3cyERrHrDw?si=TgY5R0cF0V39sr6W",
 		reward: 3,
 	},
 ];

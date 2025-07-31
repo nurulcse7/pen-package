@@ -1,0 +1,101 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function NewPenPackagePage() {
+	const router = useRouter();
+
+	const [title, setTitle] = useState("");
+	const [taskCount, setTaskCount] = useState(1);
+	const [rewardPerTask, setRewardPerTask] = useState(0.5);
+	const [status, setStatus] = useState<"Published" | "Draft">("Draft");
+	const [loading, setLoading] = useState(false);
+
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setLoading(true);
+
+		try {
+			// এখানে API কল হবে নতুন প্যাকেজ যোগ করার জন্য
+			const res = await fetch("/api/admin/pen-packages", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ title, taskCount, rewardPerTask, status }),
+			});
+
+			if (!res.ok) throw new Error("Failed to add package");
+
+			alert("নতুন প্যাকেজ সফলভাবে যোগ করা হয়েছে!");
+			router.push("/admin/content/pen-packages");
+		} catch (error) {
+			alert("ত্রুটি হয়েছে, আবার চেষ্টা করুন!");
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	return (
+		<div className="max-w-md mx-auto p-6 bg-white rounded shadow mt-8">
+			<h1 className="text-2xl font-bold mb-6">➕ নতুন পেন প্যাকেজ যোগ করুন</h1>
+			<form onSubmit={handleSubmit} className="space-y-4">
+				<div>
+					<label className="block font-semibold mb-1">প্যাকেজ নাম</label>
+					<input
+						type="text"
+						required
+						value={title}
+						onChange={e => setTitle(e.target.value)}
+						className="w-full border px-3 py-2 rounded"
+						placeholder="প্যাকেজের নাম লিখুন"
+					/>
+				</div>
+
+				<div>
+					<label className="block font-semibold mb-1">টাস্ক সংখ্যা</label>
+					<input
+						type="number"
+						min={1}
+						required
+						value={taskCount}
+						onChange={e => setTaskCount(parseInt(e.target.value))}
+						className="w-full border px-3 py-2 rounded"
+					/>
+				</div>
+
+				<div>
+					<label className="block font-semibold mb-1">
+						রিওয়ার্ড (টাকা / টাস্ক)
+					</label>
+					<input
+						type="number"
+						min={0}
+						step="0.01"
+						required
+						value={rewardPerTask}
+						onChange={e => setRewardPerTask(parseFloat(e.target.value))}
+						className="w-full border px-3 py-2 rounded"
+					/>
+				</div>
+
+				<div>
+					<label className="block font-semibold mb-1">স্ট্যাটাস</label>
+					<select
+						value={status}
+						onChange={e => setStatus(e.target.value as "Published" | "Draft")}
+						className="w-full border px-3 py-2 rounded">
+						<option value="Published">Published</option>
+						<option value="Draft">Draft</option>
+					</select>
+				</div>
+
+				<button
+					type="submit"
+					disabled={loading}
+					className="w-full bg-gradient-to-r from-blue-500 to-green-500 text-white py-2 rounded hover:opacity-90 transition">
+					{loading ? "সেভ হচ্ছে..." : "সেভ করুন"}
+				</button>
+			</form>
+		</div>
+	);
+}
