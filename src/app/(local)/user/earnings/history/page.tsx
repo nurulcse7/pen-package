@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 
 type Earning = {
 	_id: number;
+	title: string;
 	source: string;
 	amount: number;
 	date: string;
@@ -82,32 +83,53 @@ export default function EarningsHistoryPage() {
 						<thead className="bg-indigo-50">
 							<tr>
 								<th className="p-3 border-b border-gray-300 text-left">
+									Title
+								</th>
+								<th className="p-3 border-b border-gray-300 text-right">
+									টাকা
+								</th>
+								<th className="p-3 border-b border-gray-300 text-left">
 									তারিখ
 								</th>
 								<th className="p-3 border-b border-gray-300 text-left">
 									সোর্স
 								</th>
-								<th className="p-3 border-b border-gray-300 text-right">
-									টাকা
-								</th>
+
 								<th className="p-3 border-b border-gray-300 text-left">
 									স্ট্যাটাস
 								</th>
 							</tr>
 						</thead>
 						<tbody>
-							{earnings.map(({ _id, date, source, amount, status }) => (
+							{earnings.map(({ _id, date, source, amount, status, title }) => (
 								<tr
 									key={_id}
-									className="hover:bg-indigo-50 transition-colors cursor-default">
-									<td className="p-3 border-b border-gray-300">
+									className="hover:bg-indigo-50 transition-colors  cursor-default">
+									<td className="p-3 border-b border-gray-300 align-top">
+										<div
+											className="max-w-[220px] capitalize  font-medium text-gray-800"
+											title={title}>
+											{title}
+										</div>
+									</td>
+
+									<td className="p-3 border-b border-gray-300 text-right align-top">
+										{source === "Withdraw" && status === "Paid" ? (
+											<span className="text-red-600">-৳ {amount}</span>
+										) : (
+											<span className="text-green-600">+৳ {amount}</span>
+										)}
+									</td>
+
+									<td className="p-3 border-b border-gray-300 align-top">
 										{new Date(date).toLocaleDateString("bn-BD", {
 											year: "numeric",
 											month: "long",
 											day: "numeric",
 										})}
 									</td>
-									<td className="p-3 border-b border-gray-300">
+
+									<td className="p-3 border-b border-gray-300 align-top">
 										{source === "Video" && (
 											<span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-sm">
 												🎥 ভিডিও
@@ -124,17 +146,14 @@ export default function EarningsHistoryPage() {
 											</span>
 										)}
 										{source === "Withdraw" && (
-											<span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-sm">
-												Withdraw
+											<span className="bg-red-100 text-red-700 px-2 py-1 rounded-full text-sm">
+												💸 উত্তোলন
 											</span>
 										)}
 									</td>
 
-									<td className="p-3 border-b border-gray-300 text-right">
-										{amount} ৳
-									</td>
 									<td
-										className={`p-3 border-b border-gray-300 font-semibold ${
+										className={`p-3 border-b border-gray-300 font-semibold align-top ${
 											status === "Paid"
 												? "text-green-600"
 												: status === "Pending"

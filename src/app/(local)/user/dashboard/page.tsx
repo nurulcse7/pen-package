@@ -19,7 +19,7 @@ const Dashboard = () => {
 	}
 
 	// Calculate progress percentage for daily target
-	const videoProgress = Math.min(100, (user?.videosWatchedToday || 0) * 20);
+	// const videoProgress = Math.min(100, (user?.videosWatchedToday || 0) * 20);
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 pb-20">
@@ -118,19 +118,19 @@ const Dashboard = () => {
 					},
 					{
 						label: "আজকের আয়",
-						value: `৳${user?.todayEarning || 0}`,
+						value: `৳${0}`,
 						icon: "📈",
 						color: "from-blue-500 to-indigo-600",
 					},
 					{
 						label: "সাবমিটকৃত কাজ",
-						value: user?.submittedTasks || 0,
+						value: 0,
 						icon: "📝",
 						color: "from-purple-500 to-fuchsia-600",
 					},
 					{
 						label: "দেখা অ্যাড",
-						value: user?.watchedAds || 0,
+						value: 0,
 						icon: "👁️",
 						color: "from-amber-500 to-orange-600",
 					},
@@ -157,7 +157,7 @@ const Dashboard = () => {
 			</div>
 
 			{/* Daily Target */}
-			<div
+			{/* <div
 				className={`bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 mt-10 mx-6 text-white shadow-xl transform transition-all duration-700 delay-300 ${
 					isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
 				}`}>
@@ -180,7 +180,7 @@ const Dashboard = () => {
 					আপনাকে আজ কমপক্ষে <strong>৫টি ভিডিও</strong> দেখতে হবে। এখন পর্যন্ত
 					দেখেছেন: <strong>{user?.videosWatchedToday || 0}</strong>
 				</p>
-			</div>
+			</div> */}
 
 			{/* Quick Access Buttons */}
 			<div
@@ -228,7 +228,7 @@ const Dashboard = () => {
 			</div>
 
 			{/* Bonus / Offer */}
-			{setting?.bonusOffer && (
+			{/* {setting?.bonusOffer && (
 				<div
 					className={`bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl p-6 mt-10 mx-6 text-white shadow-xl transform transition-all duration-700 delay-500 ${
 						isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
@@ -245,7 +245,7 @@ const Dashboard = () => {
 						</div>
 					</div>
 				</div>
-			)}
+			)} */}
 
 			{/* Referral Info */}
 			<div
@@ -255,13 +255,13 @@ const Dashboard = () => {
 				{[
 					{
 						label: "রেফার করেছেন",
-						value: user?.totalReferrals || 0,
+						value: 0,
 						icon: "👥",
 						color: "from-blue-500 to-indigo-600",
 					},
 					{
 						label: "রেফার ইনকাম",
-						value: `৳${user?.referralEarnings || 0}`,
+						value: `৳${0}`,
 						icon: "💸",
 						color: "from-green-500 to-emerald-600",
 					},
@@ -288,7 +288,7 @@ const Dashboard = () => {
 			</div>
 
 			{/* Leaderboard */}
-			{user?.rank && (
+			{/* {user?.rank && (
 				<div
 					className={`bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-6 mt-10 mx-6 text-white shadow-xl transform transition-all duration-700 delay-700 ${
 						isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
@@ -311,8 +311,7 @@ const Dashboard = () => {
 						</div>
 					</div>
 				</div>
-			)}
-			
+			)} */}
 
 			{/* Custom Animation Styles */}
 			<style jsx global>{`

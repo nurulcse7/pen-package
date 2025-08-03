@@ -6,12 +6,12 @@ import { toast } from "sonner";
 
 type Payment = {
 	_id: string;
-	userName: string;
-	userEmail: string;
+	userId?: any;
+	number: number;
 	amount: number;
 	method: string;
-	status: "pending" | "approved" | "rejected";
-	date: string;
+	status: string;
+	createdAt: string;
 };
 
 export default function PaymentHistory() {
@@ -22,12 +22,12 @@ export default function PaymentHistory() {
 	useEffect(() => {
 		const fetchPayments = async () => {
 			try {
-				const res = await baseApi("/payments");
+				const res = await baseApi("/withdraw/all?status=Paid");
 				if (!res.success) throw new Error("Failed to fetch payments");
-				setPayments(res.payments || []);
+				setPayments(res.requests);
 			} catch (err: any) {
 				setError(err.message || "Error fetching payments");
-				toast.error("পেমেন্ট হিস্টোরি লোড করতে সমস্যা হয়েছে");
+				toast.error("পেমেন্ট ডেটা লোড করতে সমস্যা হয়েছে");
 			} finally {
 				setLoading(false);
 			}
@@ -53,14 +53,15 @@ export default function PaymentHistory() {
 								নাম
 							</th>
 							<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-								ইমেইল
+								পেমেন্ট মেথড
+							</th>
+							<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+								পেমেন্ট নাম্বার
 							</th>
 							<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
 								অ্যামাউন্ট
 							</th>
-							<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-								মেথড
-							</th>
+
 							<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
 								তারিখ
 							</th>
@@ -73,29 +74,19 @@ export default function PaymentHistory() {
 						{payments.length > 0 ? (
 							payments.map(payment => (
 								<tr key={payment._id}>
-									<td className="px-4 py-2">{payment.userName}</td>
-									<td className="px-4 py-2">{payment.userEmail}</td>
+									<td className="px-4 py-2">{payment?.userId?.fullName}</td>
+									<td className="px-4 py-2 capitalize">{payment.method}</td>
+									<td className="px-4 py-2">{payment?.number}</td>
 									<td className="px-4 py-2 text-green-700 font-semibold">
 										৳ {payment.amount}
 									</td>
-									<td className="px-4 py-2 capitalize">{payment.method}</td>
+
 									<td className="px-4 py-2">
-										{new Date(payment.date).toLocaleDateString("bn-BD", {
-											day: "numeric",
-											month: "long",
-											year: "numeric",
-										})}
+										{new Date(payment.createdAt).toLocaleDateString("bn-BD")}
 									</td>
 									<td className="px-4 py-2">
-										<span
-											className={`px-2 py-1 rounded text-xs font-semibold ${
-												payment.status === "pending"
-													? "bg-yellow-100 text-yellow-800"
-													: payment.status === "approved"
-													? "bg-green-100 text-green-800"
-													: "bg-red-100 text-red-700"
-											}`}>
-											{payment.status}
+										<span className="text-xs px-2 py-1 bg-green-500 text-white font-bold rounded">
+											{payment?.status}
 										</span>
 									</td>
 								</tr>
