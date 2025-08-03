@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { baseApi } from "@/lib/baseApi";
+import { toast } from "sonner";
 
 export default function NewAdPage() {
 	const router = useRouter();
@@ -9,7 +11,7 @@ export default function NewAdPage() {
 	const [title, setTitle] = useState("");
 	const [url, setUrl] = useState("");
 	const [reward, setReward] = useState(0);
-	const [status, setStatus] = useState<"Published" | "Draft">("Draft");
+	const [status, setStatus] = useState<"Published" | "Draft">("Published");
 	const [loading, setLoading] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -17,23 +19,21 @@ export default function NewAdPage() {
 		setLoading(true);
 
 		try {
-			const res = await fetch("/api/admin/ads", {
+			const res = await baseApi("/ads/create-ad", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ title, url, reward, status }),
+				body: { title, url, reward, status },
 			});
 
-			if (!res.ok) throw new Error("Failed to add ad");
+			if (!res.success) throw new Error();
 
-			alert("নতুন অ্যাড সফলভাবে যোগ করা হয়েছে!");
-			router.push("/admin/content/ads");
-		} catch (error) {
-			alert("ত্রুটি হয়েছে, আবার চেষ্টা করুন!");
+			toast.success(res.message);
+			router.push("/admin/manage/ads");
+		} catch (error: any) {
+			toast.error(error?.message);
 		} finally {
 			setLoading(false);
 		}
 	};
-
 	return (
 		<div className="max-w-md mx-auto p-6 bg-white rounded shadow mt-8">
 			<h1 className="text-2xl font-bold mb-6">➕ নতুন অ্যাড যোগ করুন</h1>

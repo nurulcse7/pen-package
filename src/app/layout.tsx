@@ -8,8 +8,7 @@ import { SettingProvider } from "@/context/SettingContext";
 import Navbar from "@/components/Shared/Navbar/Navbar";
 import Footer from "@/components/Shared/Footer/Footer";
 import { usePathname } from "next/navigation";
-import { Metadata } from "next";
-
+ 
 const geistMono = Geist_Mono({
 	variable: "--font-geist-mono",
 	subsets: ["latin"],

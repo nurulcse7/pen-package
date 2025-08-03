@@ -7,6 +7,8 @@ import UserSidePanel from "@/components/User/UserSidePanel";
 import { Geist_Mono } from "next/font/google";
 import { useRouter } from "next/navigation";
 import Spinner from "@/components/Shared/Spinner/Spinner";
+import { useSetting } from "@/context/SettingContext";
+import MaintenancePage from "@/components/MaintenancePage/MaintenancePage";
 
 const geistMono = Geist_Mono({
 	variable: "--font-geist-mono",
@@ -18,6 +20,7 @@ export default function UserRootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const { setting } = useSetting();
 	const { user, loading } = useUser();
 	const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
 	const router = useRouter();
@@ -34,6 +37,9 @@ export default function UserRootLayout({
 		return <Spinner />;
 	}
 
+	if (setting?.maintenanceMode === true) {
+		return <MaintenancePage />;
+	}
 	return (
 		<div className={`${geistMono.variable} antialiased`}>
 			<title>User Dashboard | Pen Packaging</title>
@@ -43,7 +49,10 @@ export default function UserRootLayout({
 				isSidePanelOpen={isSidePanelOpen}
 			/>
 			<main className={`h-screen overflow-y-hidden flex w-full`}>
-				<UserSidePanel isSidePanelOpen={isSidePanelOpen} />
+				<UserSidePanel
+					isSidePanelOpen={isSidePanelOpen}
+					setIsSidePanelOpen={setIsSidePanelOpen}
+				/>
 				<div
 					className={`relative w-full h-full overflow-auto bg-white pt-[90px] text-black `}
 					style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>

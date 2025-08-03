@@ -1,14 +1,15 @@
-import DownloadApp from '@/components/Home/DownloadApp';
-import HeroSection from '@/components/Home/HeroSection';
-import HowItWorks from '@/components/Home/HowItWorks';
-import ReferralSection from '@/components/Home/ReferralSection';
-import Testimonials from '@/components/Home/Testimonials';
-import WhyChooseUs from '@/components/Home/WhyChooseUs';
-import React from 'react'
+"use client";
+
+import DownloadApp from "@/components/Home/DownloadApp";
+import HeroSection from "@/components/Home/HeroSection";
+import HowItWorks from "@/components/Home/HowItWorks";
+import ReferralSection from "@/components/Home/ReferralSection";
+import Testimonials from "@/components/Home/Testimonials";
+import WhyChooseUs from "@/components/Home/WhyChooseUs";
+import React from "react";
 
 const RootPage = () => {
-	
-  return (
+	return (
 		<div>
 			<HeroSection />
 			<WhyChooseUs />
@@ -18,7 +19,6 @@ const RootPage = () => {
 			{/* <DownloadApp /> */}
 		</div>
 	);
-}
+};
 
-export default RootPage
-
+export default RootPage;

@@ -116,7 +116,7 @@ export default function GeneralSettings() {
 						🔧
 						{!settings?.maintenanceMode
 							? "Maintenance Mode চালু করুন"
-							: "Maintenance Mode চালু রয়েছে"}
+							: "Maintenance Mode বন্ধ করুন"}
 					</label>
 				</div>
 				<h2 className="text-2xl font-bold mb-4 pt-5">🎁 বোনাস সেটিংস</h2>

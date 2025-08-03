@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { baseApi } from "@/lib/baseApi";
+import { toast } from "sonner";
 
 export default function NewVideoPage() {
 	const router = useRouter();
@@ -9,7 +11,7 @@ export default function NewVideoPage() {
 	const [title, setTitle] = useState("");
 	const [url, setUrl] = useState("");
 	const [reward, setReward] = useState(0);
-	const [status, setStatus] = useState<"Published" | "Draft">("Draft");
+	const [status, setStatus] = useState<"Published" | "Draft">("Published");
 	const [loading, setLoading] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -17,18 +19,17 @@ export default function NewVideoPage() {
 		setLoading(true);
 
 		try {
-			const res = await fetch("/api/admin/videos", {
+			const res = await baseApi("/videos/create-video", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ title, url, reward, status }),
+				body: { title, url, reward, status },
 			});
 
-			if (!res.ok) throw new Error("Failed to add video");
+			if (!res.success) throw new Error();
 
-			alert("নতুন ভিডিও সফলভাবে যোগ করা হয়েছে!");
-			router.push("/admin/content/videos");
-		} catch (error) {
-			alert("ত্রুটি হয়েছে, আবার চেষ্টা করুন!");
+			toast.success(res.message);
+			router.push("/admin/manage/videos");
+		} catch (error: any) {
+			toast.error(error?.message);
 		} finally {
 			setLoading(false);
 		}

@@ -1,56 +1,73 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { baseApi } from "@/lib/baseApi";
+import { toast } from "sonner";
 
 interface Video {
-	id: string;
+	_id: string;
 	title: string;
 	reward: number;
 	status: "Published" | "Draft";
 	createdAt: string;
 }
 
-const initialVideos: Video[] = [
-	{
-		id: "vid001",
-		title: "আয়ের জন্য প্রথম ভিডিও",
-		reward: 5,
-		status: "Published",
-		createdAt: "2025-07-29",
-	},
-	{
-		id: "vid002",
-		title: "দ্বিতীয় ভিডিও - বিজ্ঞাপন দেখা",
-		reward: 3,
-		status: "Draft",
-		createdAt: "2025-07-30",
-	},
-	{
-		id: "vid003",
-		title: "ভবিষ্যতের ভিডিও",
-		reward: 4,
-		status: "Published",
-		createdAt: "2025-07-31",
-	},
-];
-
 export default function AdminVideosPage() {
-	const [videos, setVideos] = useState<Video[]>(initialVideos);
 	const router = useRouter();
 
-	const handleDelete = (id: string) => {
+	const [videos, setVideos] = useState<Video[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState("");
+
+	useEffect(() => {
+		const fetchVideos = async () => {
+			try {
+				const res = await baseApi("/videos");
+				if (res.success) {
+					setVideos(res.videos || []);
+				} else {
+					setError("ভিডিও আনতে সমস্যা হয়েছে");
+				}
+			} catch (err) {
+				console.error(err);
+				setError("সার্ভার ত্রুটি হয়েছে");
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchVideos();
+	}, []);
+
+	const handleDelete = async (id: string) => {
 		const confirmDelete = confirm("আপনি কি নিশ্চিতভাবে ডিলিট করতে চান?");
 		if (!confirmDelete) return;
 
-		const updated = videos.filter(video => video.id !== id);
-		setVideos(updated);
+		try {
+			const res = await baseApi(`/videos/${id}`, {
+				method: "DELETE",
+			});
+
+			if (res.success) {
+				const updated = videos.filter(video => video._id !== id);
+				setVideos(updated);
+				toast.success(res.message);
+			} else {
+				toast.error(res.message || "ডিলিট করা যায়নি।");
+			}
+		} catch (err: any) {
+			toast.error(err.message);
+		}
 	};
 
 	const handleEdit = (id: string) => {
 		router.push(`/admin/manage/videos/edit/${id}`);
 	};
+
+	if (loading) return <p>⏳ লোড হচ্ছে...</p>;
+	if (error) return <p className="text-red-500">{error}</p>;
 
 	return (
 		<div className="p-6 space-y-6">
@@ -71,7 +88,9 @@ export default function AdminVideosPage() {
 						<thead>
 							<tr className="bg-gray-100 text-gray-700">
 								<th className="px-4 py-2 border border-gray-400">শিরোনাম</th>
-								<th className="px-4 py-2 border border-gray-400">রিওয়ার্ড (৳)</th>
+								<th className="px-4 py-2 border border-gray-400">
+									রিওয়ার্ড (৳)
+								</th>
 								<th className="px-4 py-2 border border-gray-400">স্ট্যাটাস</th>
 								<th className="px-4 py-2 border border-gray-400">তারিখ</th>
 								<th className="px-4 py-2 border border-gray-400">অ্যাকশন</th>
@@ -79,9 +98,13 @@ export default function AdminVideosPage() {
 						</thead>
 						<tbody>
 							{videos.map(video => (
-								<tr key={video.id} className="hover:bg-gray-50">
-									<td className="px-4 py-2 border border-gray-400">{video.title}</td>
-									<td className="px-4 py-2 border border-gray-400">{video.reward}</td>
+								<tr key={video._id} className="hover:bg-gray-50">
+									<td className="px-4 py-2 border border-gray-400">
+										{video.title}
+									</td>
+									<td className="px-4 py-2 border border-gray-400">
+										{video.reward}
+									</td>
 									<td className="px-4 py-2 border border-gray-400">
 										<span
 											className={`px-2 py-1 rounded text-xs font-medium ${
@@ -92,16 +115,22 @@ export default function AdminVideosPage() {
 											{video.status}
 										</span>
 									</td>
-									<td className="px-4 py-2 border border-gray-400">{video.createdAt}</td>
+									<td className="px-4 py-2 border border-gray-400">
+										{new Date(video?.createdAt).toLocaleDateString("bn-BD", {
+											year: "numeric",
+											month: "long",
+											day: "numeric",
+										})}
+									</td>
 									<td className="px-4 py-2 border border-gray-400">
 										<div className="flex gap-3">
 											<button
-												onClick={() => handleEdit(video.id)}
+												onClick={() => handleEdit(video._id)}
 												className="text-indigo-600 hover:underline text-xs font-semibold">
 												✏️ Edit
 											</button>
 											<button
-												onClick={() => handleDelete(video.id)}
+												onClick={() => handleDelete(video._id)}
 												className="text-red-600 hover:underline text-xs font-semibold">
 												🗑️ Delete
 											</button>

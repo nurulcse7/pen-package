@@ -6,61 +6,88 @@ import ReactPlayer from "react-player";
 import { useUser } from "@/context/UserContext";
 import { baseApi } from "@/lib/baseApi";
 
-const ads = [
-	{
-		id: 111,
-		title: "নতুন পণ্যের বিজ্ঞাপন",
-		videoUrl: "https://youtu.be/GQy3mSk3l28?si=ja6U1Eylt2gVqI_5",
-		reward: 2,
-	},
-	{
-		id: 121,
-		title: "ডিসকাউন্ট অফার বিজ্ঞাপন",
-		videoUrl: "https://youtu.be/q3cyERrHrDw?si=TgY5R0cF0V39sr6W",
-		reward: 3,
-	},
-];
+interface Ad {
+	_id: string;
+	title: string;
+	url: string; // ensure videoUrl exists
+	reward: number;
+	status: "Published" | "Draft";
+	createdAt: string;
+}
 
 export default function WatchAdsPage() {
 	const { user, setUser } = useUser();
-	const [watchedIds, setWatchedIds] = useState<number[]>([]);
-	const [currentAd, setCurrentAd] = useState<any | null>(null);
+	const [ads, setAds] = useState<Ad[]>([]);
+	const [watchedIds, setWatchedIds] = useState<string[]>([]);
+	const [currentAd, setCurrentAd] = useState<Ad | null>(null);
 	const [earned, setEarned] = useState(0);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState("");
 
+	// 🔄 বিজ্ঞাপন লোড
 	useEffect(() => {
-		const nextAd = ads.find(ad => !watchedIds.includes(ad.id));
-		setCurrentAd(nextAd || null);
-	}, [watchedIds]);
-
-	const handleAdComplete = async (id: number) => {
-		if (!watchedIds.includes(id)) {
-			const video = ads.find(v => v.id === id);
-			if (!video) return;
-
+		const fetchAds = async () => {
 			try {
-				const res = await baseApi("/videos/video-complete", {
-					method: "POST",
-					body: { videoId: id, title: video?.title, reward: video.reward },
-				});
-
-				if (!res.success) throw new Error();
-
-				setUser({ ...user, balance: res.newBalance });
-				setEarned(earned + video?.reward);
-				setWatchedIds(prev => [...prev, id]);
-				toast.success("🎉 ভিডিও দেখেছেন! ইনকাম যুক্ত হয়েছে।");
-			} catch (error: any) {
-				toast.error(error?.message || "ইনকাম আপডেট করতে সমস্যা হয়েছে।");
+				const res = await baseApi("/watched-ads/unwatched");
+				if (res.success) {
+					setAds(res.ads || []);
+				} else {
+					setError("বিজ্ঞাপন আনতে সমস্যা হয়েছে");
+				}
+			} catch (err) {
+				console.error(err);
+				setError("সার্ভার ত্রুটি হয়েছে");
+			} finally {
+				setLoading(false);
 			}
+		};
+
+		fetchAds();
+	}, []);
+
+	// ✅ প্রথম ad দেখাও
+	useEffect(() => {
+		if (ads.length > 0) {
+			const nextAd = ads.find(ad => !watchedIds.includes(ad._id));
+			setCurrentAd(nextAd || null);
+		}
+	}, [ads, watchedIds]);
+
+	// 🎯 ভিডিও দেখা শেষ হলে reward এবং পরবর্তী ad
+	const handleAdComplete = async (id: string) => {
+		if (watchedIds.includes(id)) return;
+
+		const ad = ads.find(v => v._id === id);
+		if (!ad) return;
+
+		try {
+			const res = await baseApi("/watched-ads/ad-complete", {
+				method: "POST",
+				body: { adsId: id, title: ad.title, reward: ad.reward },
+			});
+
+			if (!res.success) throw new Error();
+
+			setUser({ ...user, balance: res.newBalance });
+			setEarned(prev => prev + ad.reward);
+			setWatchedIds(prev => [...prev, id]);
+			toast.success(res.message);
+		} catch (error: any) {
+			toast.error(error?.message || "ইনকাম আপডেট করতে সমস্যা হয়েছে।");
 		}
 	};
+
 	return (
 		<div className="max-w-xl mx-auto py-10 px-4 text-center">
 			<h1 className="text-3xl font-bold text-indigo-700 mb-4">
 				📲 বিজ্ঞাপন দেখে ইনকাম
 			</h1>
 
-			{currentAd ? (
+			{loading ? (
+				<p className="text-gray-500">লোড হচ্ছে...</p>
+			) : error ? (
+				<p className="text-red-600">{error}</p>
+			) : currentAd ? (
 				<>
 					<p className="text-gray-600 mb-6">
 						একটি বিজ্ঞাপন শেষ হলে পরবর্তীটি দেখানো হবে।
@@ -70,10 +97,10 @@ export default function WatchAdsPage() {
 							{currentAd.title}
 						</h2>
 						<ReactPlayer
-							src={currentAd.videoUrl}
+							src={currentAd.url}
 							controls
 							width="100%"
-							onEnded={() => handleAdComplete(currentAd?.id)}
+							onEnded={() => handleAdComplete(currentAd._id)}
 						/>
 						<p className="mt-2 text-green-600 font-medium">
 							🎁 এই বিজ্ঞাপনের ইনকাম: {currentAd.reward} টাকা
@@ -83,7 +110,7 @@ export default function WatchAdsPage() {
 			) : (
 				<div className="bg-white p-6 rounded shadow text-gray-700">
 					<h2 className="text-xl font-semibold text-red-600 mb-2">
-						আজকের সব বিজ্ঞাপন আপনি দেখে ফেলেছেন
+						এই মুহূর্তে কোনো বিজ্ঞাপন নেই
 					</h2>
 					<p>নতুন বিজ্ঞাপন এলে এখানে পাওয়া যাবে।</p>
 				</div>

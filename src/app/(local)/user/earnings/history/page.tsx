@@ -1,56 +1,41 @@
 "use client";
 
+import { baseApi } from "@/lib/baseApi";
 import { useState, useEffect } from "react";
 
 type Earning = {
-	id: number;
+	_id: number;
 	source: string;
 	amount: number;
-	date: string; // ISO string
+	date: string;
 	status: "Paid" | "Pending" | "Rejected";
 };
 
-const dummyEarnings: Earning[] = [
-	{
-		id: 1,
-		source: "প্যাকেজিং",
-		amount: 500,
-		date: "2025-07-15T10:00:00Z",
-		status: "Paid",
-	},
-	{
-		id: 2,
-		source: "ভিডিও দেখে আয়",
-		amount: 300,
-		date: "2025-07-18T15:30:00Z",
-		status: "Pending",
-	},
-	{
-		id: 3,
-		source: "অ্যাড দেখে আয়",
-		amount: 200,
-		date: "2025-07-19T09:45:00Z",
-		status: "Paid",
-	},
-	{
-		id: 4,
-		source: "প্যাকেজিং",
-		amount: 700,
-		date: "2025-07-20T12:15:00Z",
-		status: "Rejected",
-	},
-];
-
 export default function EarningsHistoryPage() {
 	const [earnings, setEarnings] = useState<Earning[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState("");
 
 	useEffect(() => {
-		// আসলে API থেকে ডেটা নিয়ে আসবে
-		// setEarnings(await fetch('/api/earnings').then(res => res.json()));
-		setEarnings(dummyEarnings);
+		const fetchHistory = async () => {
+			try {
+				const res = await baseApi("/histories/get-history");
+
+				if (res.success) {
+					setEarnings(res.history);
+				} else {
+					setError("ইতিহাস আনতে সমস্যা হয়েছে");
+				}
+			} catch (err: any) {
+				setError(err?.message);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchHistory();
 	}, []);
 
-	// সোর্স অনুযায়ী টোটাল ইনকাম হিসাব
 	const totalBySource = earnings.reduce((acc, cur) => {
 		acc[cur.source] = (acc[cur.source] || 0) + cur.amount;
 		return acc;
@@ -59,6 +44,9 @@ export default function EarningsHistoryPage() {
 	// মোট ইনকাম
 	const totalIncome = earnings.reduce((acc, cur) => acc + cur.amount, 0);
 
+	if (loading) return <p>⏳ লোড হচ্ছে...</p>;
+	if (error)
+		return <p className="text-red-500 text-center font-bold pt-5">{error}</p>;
 	return (
 		<main className="max-w-5xl mx-auto p-6">
 			<h1 className="text-3xl font-bold mb-6 text-center text-indigo-700">
@@ -108,9 +96,9 @@ export default function EarningsHistoryPage() {
 							</tr>
 						</thead>
 						<tbody>
-							{earnings.map(({ id, date, source, amount, status }) => (
+							{earnings.map(({ _id, date, source, amount, status }) => (
 								<tr
-									key={id}
+									key={_id}
 									className="hover:bg-indigo-50 transition-colors cursor-default">
 									<td className="p-3 border-b border-gray-300">
 										{new Date(date).toLocaleDateString("bn-BD", {
@@ -119,9 +107,31 @@ export default function EarningsHistoryPage() {
 											day: "numeric",
 										})}
 									</td>
-									<td className="p-3 border-b border-gray-300">{source}</td>
+									<td className="p-3 border-b border-gray-300">
+										{source === "Video" && (
+											<span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-sm">
+												🎥 ভিডিও
+											</span>
+										)}
+										{source === "Ads" && (
+											<span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-sm">
+												📢 বিজ্ঞাপন
+											</span>
+										)}
+										{source === "Packaging" && (
+											<span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-sm">
+												✍️ পেন প্যাকেজ
+											</span>
+										)}
+										{source === "Withdraw" && (
+											<span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-sm">
+												Withdraw
+											</span>
+										)}
+									</td>
+
 									<td className="p-3 border-b border-gray-300 text-right">
-										{amount.toLocaleString()} টাকা
+										{amount} ৳
 									</td>
 									<td
 										className={`p-3 border-b border-gray-300 font-semibold ${
@@ -135,15 +145,6 @@ export default function EarningsHistoryPage() {
 									</td>
 								</tr>
 							))}
-							{earnings.length === 0 && (
-								<tr>
-									<td
-										colSpan={4}
-										className="p-4 text-center text-gray-500 italic">
-										কোন আয় পাওয়া যায়নি।
-									</td>
-								</tr>
-							)}
 						</tbody>
 					</table>
 				</div>

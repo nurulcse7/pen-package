@@ -2,38 +2,61 @@
 
 import { useUser } from "@/context/UserContext";
 import { baseApi } from "@/lib/baseApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import { toast } from "sonner";
 
-const videos = [
-	{
-		id: 1111,
-		title: "কাজ শেখার ভিডিও #১",
-		url: "https://youtu.be/jCVjudmnByk?si=fNoDxIEJx8QyPGJX",
-		reward: 5,
-	},
-	{
-		id: 211,
-		title: "প্যাকেজিং টিপস ভিডিও",
-		url: "https://youtu.be/cUmUOb7j3dc?si=bt91MOnBYTiAkg_X",
-		reward: 3,
-	},
-];
+interface Video {
+	_id: string;
+	title: string;
+	url: string; // ✅ ensure this exists
+	reward: number;
+	status: "Published" | "Draft";
+	createdAt: string;
+}
 
 export default function WatchVideoPage() {
 	const { user, setUser } = useUser();
-	const [watched, setWatched] = useState<number[]>([]);
+	const [watched, setWatched] = useState<string[]>([]);
 
-	const handleComplete = async (id: number) => {
+	const [videos, setVideos] = useState<Video[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState("");
+
+	useEffect(() => {
+		const fetchVideos = async () => {
+			try {
+				const res = await baseApi("/watched-videos/unwatched");
+				if (res.success) {
+					setVideos(res.videos || []);
+				} else {
+					setError("ভিডিও আনতে সমস্যা হয়েছে");
+				}
+			} catch (err) {
+				console.error(err);
+				setError("সার্ভার ত্রুটি হয়েছে");
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchVideos();
+	}, []);
+
+	const handleComplete = async (id: string) => {
+		// ✅ এটা string হওয়া উচিত
 		if (!watched.includes(id)) {
-			const video = videos.find(v => v.id === id);
+			const video = videos.find(v => v._id === id);
 			if (!video) return;
 
 			try {
-				const res = await baseApi("/videos/video-complete", {
+				const res = await baseApi("/watched-videos/video-complete", {
 					method: "POST",
-					body: { videoId: id, title: video?.title, reward: video.reward },
+					body: {
+						videoId: id,
+						title: video.title,
+						reward: video.reward,
+					},
 				});
 
 				if (!res.success) throw new Error();
@@ -48,7 +71,7 @@ export default function WatchVideoPage() {
 	};
 
 	const totalIncome = watched.reduce((sum, id) => {
-		const video = videos.find(v => v.id === id);
+		const video = videos.find(v => v._id === id);
 		return video ? sum + video.reward : sum;
 	}, 0);
 
@@ -62,35 +85,38 @@ export default function WatchVideoPage() {
 
 			{allWatched ? (
 				<div className="bg-yellow-100 p-6 rounded-md text-center text-yellow-800 font-semibold">
-					আপনি আজকের সব ভিডিও দেখেছেন। নতুন ভিডিও আসলে এখানে পাওয়া যাবে।
+					এই মুহূর্তে কোনো ভিডিও নেই । নতুন ভিডিও আসলে এখানে পাওয়া যাবে।
 				</div>
 			) : (
 				<div className="space-y-8">
 					{videos.map(video => (
 						<div
-							key={video.id}
+							key={video._id}
 							className="bg-white rounded shadow p-4 relative">
 							<h3 className="text-xl font-semibold mb-2 flex items-center justify-between">
 								{video.title}
 
-								{watched.includes(video.id) && (
+								{watched.includes(video._id) && (
 									<span className="text-green-700 font-bold">
 										Completed - Earned: {video.reward} টাকা
 									</span>
 								)}
-								<p className="mt-2 text-green-600 font-medium">
-									🎁 এই ভিডিও ইনকাম: {video.reward} টাকা
-								</p>
+
+								{!watched.includes(video._id) && (
+									<p className="mt-2 text-green-600 font-medium">
+										🎁 এই ভিডিও ইনকাম: {video.reward} টাকা
+									</p>
+								)}
 							</h3>
 
-							{!watched.includes(video.id) && (
+							{!watched.includes(video._id) && (
 								<div className="h-[400px]">
 									<ReactPlayer
 										src={video.url}
 										controls
 										height="100%"
 										width="100%"
-										onEnded={() => handleComplete(video.id)}
+										onEnded={() => handleComplete(video._id)}
 									/>
 								</div>
 							)}

@@ -73,8 +73,12 @@ export default function AdminPenPackagePage() {
 						<thead>
 							<tr className="bg-gray-100 text-gray-700">
 								<th className="px-4 py-2 border border-gray-400">নাম</th>
-								<th className="px-4 py-2 border border-gray-400">টাস্ক সংখ্যা</th>
-								<th className="px-4 py-2 border border-gray-400">রিওয়ার্ড/টাস্ক</th>
+								<th className="px-4 py-2 border border-gray-400">
+									টাস্ক সংখ্যা
+								</th>
+								<th className="px-4 py-2 border border-gray-400">
+									রিওয়ার্ড/টাস্ক
+								</th>
 								<th className="px-4 py-2 border border-gray-400">স্ট্যাটাস</th>
 								<th className="px-4 py-2 border border-gray-400">তারিখ</th>
 								<th className="px-4 py-2 border border-gray-400">অ্যাকশন</th>
@@ -83,9 +87,15 @@ export default function AdminPenPackagePage() {
 						<tbody>
 							{packages.map(pkg => (
 								<tr key={pkg.id} className="hover:bg-gray-50">
-									<td className="px-4 py-2 border border-gray-400">{pkg.title}</td>
-									<td className="px-4 py-2 border border-gray-400">{pkg.taskCount}</td>
-									<td className="px-4 py-2 border border-gray-400">{pkg.rewardPerTask}৳</td>
+									<td className="px-4 py-2 border border-gray-400">
+										{pkg.title}
+									</td>
+									<td className="px-4 py-2 border border-gray-400">
+										{pkg.taskCount}
+									</td>
+									<td className="px-4 py-2 border border-gray-400">
+										{pkg.rewardPerTask}৳
+									</td>
 									<td className="px-4 py-2 border border-gray-400">
 										<span
 											className={`px-2 py-1 rounded text-xs font-medium ${
@@ -96,7 +106,14 @@ export default function AdminPenPackagePage() {
 											{pkg.status}
 										</span>
 									</td>
-									<td className="px-4 py-2 border border-gray-400">{pkg.createdAt}</td>
+									<td className="px-4 py-2 border border-gray-400">
+										{" "}
+										{new Date(pkg?.createdAt).toLocaleDateString("bn-BD", {
+											year: "numeric",
+											month: "long",
+											day: "numeric",
+										})}
+									</td>
 									<td className="px-4 py-2 border border-gray-400">
 										<div className="flex gap-3">
 											<button
