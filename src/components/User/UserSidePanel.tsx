@@ -222,7 +222,7 @@ const UserSidePanel = ({ isSidePanelOpen, setIsSidePanelOpen }: any) => {
 
 				{/* Navigation Menu */}
 				<nav className="space-y-1">
-					{links.map((link, index) => {
+					{links.map(link => {
 						const isSimpleLink = !!link.href;
 						const hasSubmenu = !!link.submenu;
 						const isSubmenuOpen = openMenus[link.label];
@@ -322,7 +322,7 @@ const UserSidePanel = ({ isSidePanelOpen, setIsSidePanelOpen }: any) => {
 
 								{hasSubmenu && isSubmenuOpen && (
 									<div className="ml-4 space-y-1 pl-2 border-l-2 border-indigo-500 border-opacity-30">
-										{link.submenu.map((sublink, subIndex) => {
+										{link.submenu.map(sublink => {
 											const isSubActive = pathname.startsWith(sublink.href);
 											return (
 												<Link

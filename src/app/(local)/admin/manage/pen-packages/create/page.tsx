@@ -28,8 +28,8 @@ export default function NewPenPackagePage() {
 
 			alert("নতুন প্যাকেজ সফলভাবে যোগ করা হয়েছে!");
 			router.push("/admin/content/pen-packages");
-		} catch (error) {
-			alert("ত্রুটি হয়েছে, আবার চেষ্টা করুন!");
+		} catch (error:any) {
+			alert(error.message || "ত্রুটি হয়েছে, আবার চেষ্টা করুন!");
 		} finally {
 			setLoading(false);
 		}

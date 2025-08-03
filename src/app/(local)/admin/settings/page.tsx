@@ -55,8 +55,8 @@ export default function GeneralSettings() {
 			if (!res.success) throw new Error();
 			setSetting(settings);
 			toast.success("সেটিংস আপডেট সফল হয়েছে");
-		} catch (err) {
-			toast.error("সেটিংস আপডেট ব্যর্থ হয়েছে");
+		} catch (err:any) {
+			toast.error(err.message||"সেটিংস আপডেট ব্যর্থ হয়েছে");
 		}
 	};
 	const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {

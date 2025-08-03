@@ -1,6 +1,6 @@
 "use client";
 
-import DownloadApp from "@/components/Home/DownloadApp";
+// import DownloadApp from "@/components/Home/DownloadApp";
 import HeroSection from "@/components/Home/HeroSection";
 import HowItWorks from "@/components/Home/HowItWorks";
 import ReferralSection from "@/components/Home/ReferralSection";

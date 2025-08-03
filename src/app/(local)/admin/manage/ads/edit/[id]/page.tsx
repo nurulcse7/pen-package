@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { baseApi } from "@/lib/baseApi";
 import { toast } from "sonner";
 
@@ -33,15 +33,15 @@ export default function EditAdPage() {
 				const res = await baseApi(`/ads/${id}`);
 				if (!res.success) throw new Error("Failed to fetch ad");
 				setAd(res.ad);
-			} catch (error) {
-				toast.error("অ্যাড আনতে সমস্যা হয়েছে!");
+			} catch (error:any) {
+				toast.error(error.message||"অ্যাড আনতে সমস্যা হয়েছে!" );
 				router.push("/admin/manage/ads");
 			} finally {
 				setLoadingData(false);
 			}
 		};
 		fetchAd();
-	}, [id]);
+	}, [router,id]);
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

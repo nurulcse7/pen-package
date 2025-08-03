@@ -10,7 +10,7 @@ interface Setting {
 	supportEmail: string;
 	maintenanceMode: boolean;
 	announcement: string;
-	referralBonus: Number;
+	referralBonus: number;
 }
 
 interface SettingContextType {
@@ -39,8 +39,7 @@ export const SettingProvider = ({
 				if (res?.setting) {
 					setSetting(res.setting);
 				}
-			} catch (error) {
-				console.error("Setting fetch failed:", error);
+			} catch {
 				setSetting(null);
 			} finally {
 				setLoading(false);

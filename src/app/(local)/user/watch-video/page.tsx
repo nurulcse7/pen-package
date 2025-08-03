@@ -77,6 +77,8 @@ export default function WatchVideoPage() {
 
 	const allWatched = watched.length === videos.length;
 
+	if (loading) return <p className="text-center mt-10">লোড হচ্ছে...</p>;
+	if (error) return <p className="text-center text-red-400 mt-10">{ error}</p>;
 	return (
 		<div className="max-w-4xl mx-auto py-8 px-4">
 			<h1 className="text-3xl font-bold mb-6 text-center">

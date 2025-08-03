@@ -29,7 +29,7 @@ export default function EditPenPackagePage() {
 				setTaskCount(data.taskCount);
 				setRewardPerTask(data.rewardPerTask);
 				setStatus(data.status);
-			} catch (error) {
+			} catch {
 				alert("ডেটা আনতে সমস্যা হয়েছে");
 				router.push("/admin/content/pen-packages");
 			} finally {
@@ -38,7 +38,8 @@ export default function EditPenPackagePage() {
 		};
 
 		fetchPackage();
-	}, [id]);
+	}, [router, id]);
+
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -55,8 +56,8 @@ export default function EditPenPackagePage() {
 
 			alert("প্যাকেজ সফলভাবে আপডেট হয়েছে!");
 			router.push("/admin/content/pen-packages");
-		} catch (error) {
-			alert("ত্রুটি হয়েছে, আবার চেষ্টা করুন");
+		} catch (error: any) {
+			alert(error.message || "ত্রুটি হয়েছে, আবার চেষ্টা করুন");
 		} finally {
 			setLoading(false);
 		}

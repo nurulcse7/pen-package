@@ -32,7 +32,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 			try {
 				const res = await baseApi("/auth/me");
 				setUser(res);
-			} catch (error: any) {
+			} catch {
 				setUser(null);
 			} finally {
 				setLoading(false);

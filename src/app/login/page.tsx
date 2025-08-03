@@ -30,7 +30,6 @@ const Login = () => {
 		} catch (err: any) {
 			setError(err.message || "Email not verified.");
 			if (err?.code === 403) {
-				
 				setShowResend(true);
 			}
 			setLoading(false);
@@ -56,8 +55,10 @@ const Login = () => {
 										body: { email },
 									});
 									setShowResendMessage(resendRes?.message);
-								} catch (err) {
-									toast.error("Failed to resend verification email.");
+								} catch (err: any) {
+									toast.error(
+										err.message || "Failed to resend verification email."
+									);
 								}
 							}}
 							className="mt-2 text-sm text-blue-600 underline">

@@ -34,15 +34,16 @@ export default function EditVideoPage() {
 				const res = await baseApi(`/videos/${id}`);
 				if (!res.success) throw new Error("Failed to fetch video");
 				setVideo(res.video);
-			} catch (error) {
-				toast.error("ভিডিও আনতে সমস্যা হয়েছে!");
+			} catch (error: any) {
+				toast.error(error?.message || "ভিডিও আনতে সমস্যা হয়েছে!");
 				router.push("/admin/manage/videos");
 			} finally {
 				setLoadingData(false);
 			}
 		};
 		fetchVideo();
-	}, [id]);
+	}, [router, id]);
+
 
 	// ✅ Handle input change
 	const handleChange = (
@@ -70,8 +71,8 @@ export default function EditVideoPage() {
 			} else {
 				toast.error("❌ ভিডিও আপডেট ব্যর্থ হয়েছে!");
 			}
-		} catch (err) {
-			toast.error("⚠️ সার্ভার সমস্যা!");
+		} catch (err:any) {
+			toast.error(err.message || "⚠️ সার্ভার সমস্যা!");
 		} finally {
 			setLoading(false);
 		}
