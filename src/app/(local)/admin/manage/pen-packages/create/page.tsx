@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { baseApi } from "@/lib/baseApi";
+import { toast } from "sonner";
 
 export default function NewPenPackagePage() {
 	const router = useRouter();
-
 	const [title, setTitle] = useState("");
-	const [taskCount, setTaskCount] = useState(1);
+	const [totalTasks, setTotalTasks] = useState(1);
 	const [rewardPerTask, setRewardPerTask] = useState(0.5);
-	const [status, setStatus] = useState<"Published" | "Draft">("Draft");
+	const [status, setStatus] = useState<"Published" | "Draft">("Published");
 	const [loading, setLoading] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -17,19 +18,17 @@ export default function NewPenPackagePage() {
 		setLoading(true);
 
 		try {
-			// এখানে API কল হবে নতুন প্যাকেজ যোগ করার জন্য
-			const res = await fetch("/api/admin/pen-packages", {
+			const res = await baseApi("/pen-packages", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ title, taskCount, rewardPerTask, status }),
+				body: { title, totalTasks, rewardPerTask, status },
 			});
 
-			if (!res.ok) throw new Error("Failed to add package");
+			if (!res.success) throw new Error("Failed to add package");
 
-			alert("নতুন প্যাকেজ সফলভাবে যোগ করা হয়েছে!");
-			router.push("/admin/content/pen-packages");
-		} catch (error:any) {
-			alert(error.message || "ত্রুটি হয়েছে, আবার চেষ্টা করুন!");
+			toast.success(res.message || "নতুন প্যাকেজ সফলভাবে যোগ করা হয়েছে!");
+			router.push("/admin/manage/pen-packages");
+		} catch (error: any) {
+			toast.error(error.message || "ত্রুটি হয়েছে, আবার চেষ্টা করুন!");
 		} finally {
 			setLoading(false);
 		}
@@ -57,8 +56,8 @@ export default function NewPenPackagePage() {
 						type="number"
 						min={1}
 						required
-						value={taskCount}
-						onChange={e => setTaskCount(parseInt(e.target.value))}
+						value={totalTasks}
+						onChange={e => setTotalTasks(parseInt(e.target.value))}
 						className="w-full border px-3 py-2 rounded"
 					/>
 				</div>

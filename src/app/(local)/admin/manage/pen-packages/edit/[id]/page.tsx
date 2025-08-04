@@ -1,71 +1,82 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { baseApi } from "@/lib/baseApi";
+import { toast } from "sonner";
+
+type PenPackage = {
+	_id?: string;
+	title: string;
+	totalTasks: number;
+	rewardPerTask: number;
+	status: "Published" | "Draft";
+};
 
 export default function EditPenPackagePage() {
 	const router = useRouter();
-	const searchParams = useSearchParams();
-	const id = searchParams.get("id") || "";
-
-	const [title, setTitle] = useState("");
-	const [taskCount, setTaskCount] = useState(1);
-	const [rewardPerTask, setRewardPerTask] = useState(0.5);
-	const [status, setStatus] = useState<"Published" | "Draft">("Draft");
+	const { id } = useParams();
+	const [pkg, setPkg] = useState<PenPackage>({
+		title: "",
+		totalTasks: 1,
+		rewardPerTask: 0.5,
+		status: "Draft",
+	});
 	const [loading, setLoading] = useState(false);
 	const [loadingData, setLoadingData] = useState(true);
 
 	useEffect(() => {
 		if (!id) return;
 
-		// Fetch the package data by id to prefill the form
-		const fetchPackage = async () => {
+		const fetchData = async () => {
 			setLoadingData(true);
 			try {
-				const res = await fetch(`/api/admin/pen-packages/${id}`);
-				if (!res.ok) throw new Error("Failed to fetch data");
-				const data = await res.json();
-				setTitle(data.title);
-				setTaskCount(data.taskCount);
-				setRewardPerTask(data.rewardPerTask);
-				setStatus(data.status);
-			} catch {
-				alert("ডেটা আনতে সমস্যা হয়েছে");
-				router.push("/admin/content/pen-packages");
+				const res = await baseApi(`/pen-packages/${id}`);
+				if (!res.success) throw new Error("Failed to fetch package");
+				setPkg(res.data);
+			} catch (err: any) {
+				toast.error(err.message || "ডেটা আনতে সমস্যা হয়েছে");
+				router.push("/admin/manage/pen-packages");
 			} finally {
 				setLoadingData(false);
 			}
 		};
 
-		fetchPackage();
-	}, [router, id]);
+		fetchData();
+	}, [id, router]);
 
+	const handleChange = (
+		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+	) => {
+		const { name, value } = e.target;
+		setPkg(prev => ({
+			...prev,
+			[name]:
+				name === "taskCount" || name === "rewardPerTask"
+					? parseFloat(value)
+					: value,
+		}));
+	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setLoading(true);
-
 		try {
-			const res = await fetch(`/api/admin/pen-packages/${id}`, {
+			const res = await baseApi(`/pen-packages/${id}`, {
 				method: "PUT",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ title, taskCount, rewardPerTask, status }),
+				body: pkg,
 			});
-
-			if (!res.ok) throw new Error("Failed to update");
-
-			alert("প্যাকেজ সফলভাবে আপডেট হয়েছে!");
-			router.push("/admin/content/pen-packages");
-		} catch (error: any) {
-			alert(error.message || "ত্রুটি হয়েছে, আবার চেষ্টা করুন");
+			if (!res.success) throw new Error("Failed to update package");
+			toast.success(res.message || "প্যাকেজ আপডেট সফল হয়েছে");
+			router.push("/admin/manage/pen-packages");
+		} catch (err: any) {
+			toast.error(err.message || "আপডেট করতে সমস্যা হয়েছে");
 		} finally {
 			setLoading(false);
 		}
 	};
 
-	if (loadingData) {
-		return <div className="p-6 text-center">লোড হচ্ছে...</div>;
-	}
+	if (loadingData) return <div className="p-6 text-center">লোড হচ্ছে...</div>;
 
 	return (
 		<div className="max-w-md mx-auto p-6 bg-white rounded shadow mt-8">
@@ -75,9 +86,10 @@ export default function EditPenPackagePage() {
 					<label className="block font-semibold mb-1">প্যাকেজ নাম</label>
 					<input
 						type="text"
+						name="title"
 						required
-						value={title}
-						onChange={e => setTitle(e.target.value)}
+						value={pkg.title}
+						onChange={handleChange}
 						className="w-full border px-3 py-2 rounded"
 					/>
 				</div>
@@ -86,10 +98,11 @@ export default function EditPenPackagePage() {
 					<label className="block font-semibold mb-1">টাস্ক সংখ্যা</label>
 					<input
 						type="number"
+						name="totalTasks"
 						min={1}
 						required
-						value={taskCount}
-						onChange={e => setTaskCount(parseInt(e.target.value))}
+						value={pkg.totalTasks}
+						onChange={handleChange}
 						className="w-full border px-3 py-2 rounded"
 					/>
 				</div>
@@ -100,11 +113,12 @@ export default function EditPenPackagePage() {
 					</label>
 					<input
 						type="number"
+						name="rewardPerTask"
 						min={0}
 						step="0.01"
 						required
-						value={rewardPerTask}
-						onChange={e => setRewardPerTask(parseFloat(e.target.value))}
+						value={pkg.rewardPerTask}
+						onChange={handleChange}
 						className="w-full border px-3 py-2 rounded"
 					/>
 				</div>
@@ -112,8 +126,9 @@ export default function EditPenPackagePage() {
 				<div>
 					<label className="block font-semibold mb-1">স্ট্যাটাস</label>
 					<select
-						value={status}
-						onChange={e => setStatus(e.target.value as "Published" | "Draft")}
+						name="status"
+						value={pkg.status}
+						onChange={handleChange}
 						className="w-full border px-3 py-2 rounded">
 						<option value="Published">Published</option>
 						<option value="Draft">Draft</option>

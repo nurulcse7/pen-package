@@ -12,6 +12,7 @@ const SubmitPenPackageWork = () => {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+		return confirm("Submission is not available for pen package");
 
 		if (!referenceCode || !image) {
 			toast.error("রেফারেন্স কোড এবং প্রমাণ ছবি অবশ্যই দিন।");
