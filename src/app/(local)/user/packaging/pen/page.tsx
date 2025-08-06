@@ -16,6 +16,7 @@ export default function PenPackagesPage() {
 	const [packages, setPackages] = useState<PenPackage[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
+	console.log("🚀 ~ PenPackagesPage ~ error:", error)
 	const [page, setPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
 
