@@ -69,7 +69,7 @@ const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 						</button>
 
 						{/* Logo */}
-						<Link href="/">
+						<Link className="text-3xl text-white font-bold" href="/">
 							{setting?.siteUrl ? (
 								<img
 									className="max-h-[65px]"

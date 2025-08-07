@@ -55,8 +55,8 @@ export default function GeneralSettings() {
 			if (!res.success) throw new Error();
 			setSetting(settings);
 			toast.success("সেটিংস আপডেট সফল হয়েছে");
-		} catch (err:any) {
-			toast.error(err.message||"সেটিংস আপডেট ব্যর্থ হয়েছে");
+		} catch (err: any) {
+			toast.error(err.message || "সেটিংস আপডেট ব্যর্থ হয়েছে");
 		}
 	};
 	const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,7 +76,7 @@ export default function GeneralSettings() {
 			<div className="space-y-4">
 				{[
 					{ label: "সাইট নাম", name: "siteName" },
-					{ label: "সাইট URL", name: "siteUrl" },
+					{ label: "Logo URL", name: "siteUrl" },
 					{ label: "সাপোর্ট ফোন", name: "supportPhone" },
 					{ label: "সাপোর্ট ইমেইল", name: "supportEmail" },
 				].map(({ label, name }) => (
