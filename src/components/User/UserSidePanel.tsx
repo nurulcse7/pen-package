@@ -229,7 +229,7 @@ const UserSidePanel = ({ isSidePanelOpen, setIsSidePanelOpen }: any) => {
 
 			<div
 				className={`
-          pt-[90px] lg:w-[300px] w-[280px] fixed lg:static left-0 h-full z-40
+          pt-[90px] lg:w-[350px] w-[280px] fixed lg:static left-0 h-full z-40
           px-4 py-6 space-y-3 bg-gradient-to-b from-indigo-700 via-purple-700 to-pink-700 shadow-2xl
           transform transition-transform duration-300 ease-in-out text-lg
           ${

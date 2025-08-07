@@ -70,9 +70,15 @@ const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 
 						{/* Logo */}
 						<Link href="/">
-							<span className="font-extrabold text-white text-2xl">
-								{setting?.siteName || "Dashboard"}
-							</span>
+							{setting?.siteUrl ? (
+								<img
+									className="max-h-[65px]"
+									src={setting.siteUrl}
+									alt={setting?.siteName}
+								/>
+							) : (
+								<>{setting?.siteName || "eLearning Portal"}</>
+							)}
 						</Link>
 					</div>
 

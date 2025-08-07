@@ -65,7 +65,7 @@ const AdminSidePanel = ({
 	return (
 		<div
 			className={`
-				pt-[90px] w-[300px] fixed lg:static left-0 h-full z-40
+				pt-[90px] lg:w-[350px] w-[280px] fixed lg:static left-0 h-full z-40
 				px-5 py-6 space-y-2 bg-gradient-to-b from-[#1f1c2c] via-[#302b63] to-[#24243e]
 				transform transition-transform duration-300 ease-in-out text-[17px]
 				text-white shadow-xl

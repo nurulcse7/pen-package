@@ -20,14 +20,22 @@ const Navbar = () => {
 
 	return (
 		<header className="bg-white py-1 shadow-md fixed top-0 left-0 w-full z-50">
-			<div className="container mx-auto px-4 py-3 flex items-center justify-between">
+			<div className="container mx-auto px-4 flex items-center justify-between">
 				{/* Logo */}
 				<Link href="/" className="text-3xl font-bold text-blue-600">
-					{setting?.siteName ? <>{setting?.siteName}</> : "eLearning Portal"}
+					{setting?.siteUrl ? (
+						<img
+							className="max-h-[80px]"
+							src={setting.siteUrl}
+							alt={setting?.siteName}
+						/>
+					) : (
+						<>{setting?.siteName || "eLearning Portal"}</>
+					)}
 				</Link>
 
 				{/* Desktop Nav */}
-				<nav className="hidden md:flex items-center space-x-6">
+				<nav className="hidden md:flex items-center  py-3 space-x-6">
 					{navLinks.map(link => (
 						<Link
 							key={link.name}
