@@ -1,6 +1,10 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { baseApi } from "@/lib/baseApi";
+interface PaymentMethod {
+	name: string;
+	number: string;
+}
 
 interface Setting {
 	_id: string;
@@ -11,8 +15,10 @@ interface Setting {
 	maintenanceMode: boolean;
 	announcement: string;
 	referralBonus: number;
+	paymentMethods: PaymentMethod[];
+	paymentAmount: number;
+	supportWhatsAppLink: string;
 }
-
 interface SettingContextType {
 	setting: Setting | null;
 	setSetting?: any;

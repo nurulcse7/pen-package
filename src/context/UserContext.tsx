@@ -9,7 +9,9 @@ interface User {
 	balance: number;
 	phone: number;
 	gender: string;
-	referralId: any;
+	referralId: number;
+	isPaid: boolean;
+	status: string;
 }
 
 interface UserContextType {

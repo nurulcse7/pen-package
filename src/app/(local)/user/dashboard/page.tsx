@@ -4,6 +4,7 @@ import { useUser } from "@/context/UserContext";
 import { useSetting } from "@/context/SettingContext";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 const Dashboard = () => {
 	const { user, loading } = useUser();
@@ -14,6 +15,7 @@ const Dashboard = () => {
 		setIsVisible(true);
 	}, []);
 
+	console.log(user?.referralId);
 	if (loading || settingLoading || !user?.email || !user?.role) {
 		return <Spinner />;
 	}
@@ -248,7 +250,70 @@ const Dashboard = () => {
 			)} */}
 
 			{/* Referral Info */}
-			<div
+			<div>
+				{user?.referralId && (
+					<div
+						className={`bg-white rounded-xl shadow-lg p-6 mt-10 mx-6   flex flex-col space-y-4 transform transition-all duration-700 delay-600 ${
+							isVisible
+								? "translate-y-0 opacity-100"
+								: "translate-y-10 opacity-0"
+						}`}>
+						<h3 className="text-xl font-bold mb-2 text-gray-800 text-center">
+							আপনার রেফারেল কোড ও লিঙ্ক
+						</h3>
+						<p className="text-gray-700">
+							<span className="font-semibold">রেফারেল কোড:</span>{" "}
+							<span className="text-indigo-600 font-bold">
+								{user.referralId}
+							</span>
+						</p>
+
+						<div className="flex items-center space-x-3">
+							<p className="text-gray-700 break-all">
+								<span className="font-semibold">রেফারেল লিঙ্ক:</span>{" "}
+								<span className="text-indigo-600">{`${window.location.origin}/register?referral=${user.referralId}`}</span>
+							</p>
+
+							<button
+								onClick={() => {
+									navigator.clipboard.writeText(
+										`${window.location.origin}/register?referral=${user.referralId}`
+									);
+									toast.success("রেফারেল লিঙ্ক কপি হয়েছে!");
+								}}
+								className="p-2 bg-indigo-600 rounded-md hover:bg-indigo-700 transition text-white"
+								title="Copy referral link"
+								aria-label="Copy referral link">
+								{/* Copy Icon (simple svg) */}
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									className="h-6 w-6"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+									strokeWidth={2}>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2"
+									/>
+									<rect
+										width={12}
+										height={12}
+										x={8}
+										y={8}
+										rx={2}
+										ry={2}
+										strokeLinecap="round"
+										strokeLinejoin="round"
+									/>
+								</svg>
+							</button>
+						</div>
+					</div>
+				)}
+			</div>
+			{/* <div
 				className={`grid grid-cols-1 sm:grid-cols-2 gap-6 mt-10 px-6 transform transition-all duration-700 delay-600 ${
 					isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
 				}`}>
@@ -285,7 +350,7 @@ const Dashboard = () => {
 						</div>
 					</div>
 				))}
-			</div>
+			</div> */}
 
 			{/* Leaderboard */}
 			{/* {user?.rank && (

@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import Spinner from "@/components/Shared/Spinner/Spinner";
 import { useSetting } from "@/context/SettingContext";
 import MaintenancePage from "@/components/MaintenancePage/MaintenancePage";
+import InActivePage from "@/components/InActivePage/InActivePage";
+import IsPaidPage from "@/components/IsPaidPage/IsPaidPage";
 
 const geistMono = Geist_Mono({
 	variable: "--font-geist-mono",
@@ -39,6 +41,15 @@ export default function UserRootLayout({
 
 	if (setting?.maintenanceMode === true) {
 		return <MaintenancePage />;
+	}
+	// if user not paid
+	if (!user?.isPaid) {
+		return <IsPaidPage />;
+	}
+
+	// if user in-active
+	if (user?.status === "in-active") {
+		return <InActivePage />;
 	}
 	return (
 		<div className={`${geistMono.variable} antialiased`}>

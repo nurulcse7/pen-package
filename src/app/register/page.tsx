@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { baseApi } from "@/lib/baseApi";
 import { toast } from "sonner";
+import { useSearchParams } from "next/navigation";
 
 const Register = () => {
+	const searchParams = useSearchParams();
+	const referralFromUrl = searchParams.get("referral");
+
 	const [form, setForm] = useState({
 		fullName: "",
 		phone: "",
@@ -17,6 +21,13 @@ const Register = () => {
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(null);
+
+	useEffect(() => {
+		if (referralFromUrl) {
+			setForm(prev => ({ ...prev, referral: referralFromUrl }));
+		}
+	}, [referralFromUrl]);
+
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => {
@@ -25,7 +36,6 @@ const Register = () => {
 	};
 
 	const validateForm = () => {
-		// Basic validation - চাইলে আরো বাড়ানো যাবে
 		if (!form.fullName.trim()) {
 			setError("Full Name is required");
 			return false;
@@ -46,15 +56,17 @@ const Register = () => {
 			setError("Please select gender");
 			return false;
 		}
+		if (!form.referral) {
+			setError("Please provide a referral code!");
+			return false;
+		}
 
-		// শর্তাবলী চেক করার জন্য চেকবক্স থাকলে সে ভ্যালিডেশন এখানে যুক্ত করতে হবে
 		setError("");
 		return true;
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-
 		if (!validateForm()) return;
 
 		setLoading(true);
@@ -79,9 +91,9 @@ const Register = () => {
 	};
 
 	return (
-		<div className=" flex items-center justify-center bg-gray-100 px-4 pt-18 pb-8">
+		<div className="flex items-center justify-center bg-gray-100 px-4 pt-18 pb-8">
 			{isSuccess ? (
-				<div className="h-[500px] pt-[20]   font-bold">
+				<div className="h-[500px] pt-[20] font-bold">
 					<div className="max-w-[500]">
 						<h1>{isSuccess}</h1>
 					</div>
@@ -98,14 +110,11 @@ const Register = () => {
 					<form onSubmit={handleSubmit} className="space-y-4" noValidate>
 						{/* Full Name */}
 						<div>
-							<label
-								htmlFor="fullName"
-								className="block mb-1 text-sm font-medium">
+							<label className="block mb-1 text-sm font-medium">
 								Full Name *
 							</label>
 							<input
 								type="text"
-								id="fullName"
 								name="fullName"
 								className="w-full border border-gray-300 rounded-md px-4 py-2"
 								value={form.fullName}
@@ -116,12 +125,11 @@ const Register = () => {
 
 						{/* Phone Number */}
 						<div>
-							<label htmlFor="phone" className="block mb-1 text-sm font-medium">
+							<label className="block mb-1 text-sm font-medium">
 								Phone Number *
 							</label>
 							<input
 								type="tel"
-								id="phone"
 								name="phone"
 								className="w-full border border-gray-300 rounded-md px-4 py-2"
 								value={form.phone}
@@ -133,12 +141,9 @@ const Register = () => {
 
 						{/* Email */}
 						<div>
-							<label htmlFor="email" className="block mb-1 text-sm font-medium">
-								Email *
-							</label>
+							<label className="block mb-1 text-sm font-medium">Email *</label>
 							<input
 								type="email"
-								id="email"
 								name="email"
 								className="w-full border border-gray-300 rounded-md px-4 py-2"
 								value={form.email}
@@ -149,32 +154,23 @@ const Register = () => {
 
 						{/* Password */}
 						<div>
-							<label
-								htmlFor="password"
-								className="block mb-1 text-sm font-medium">
-								Password (Min: 6 Characters) *
+							<label className="block mb-1 text-sm font-medium">
+								Password *
 							</label>
 							<input
 								type="password"
-								id="password"
 								name="password"
 								className="w-full border border-gray-300 rounded-md px-4 py-2"
 								value={form.password}
 								onChange={handleChange}
 								required
-								minLength={6}
 							/>
 						</div>
 
 						{/* Gender */}
 						<div>
-							<label
-								htmlFor="gender"
-								className="block mb-1 text-sm font-medium">
-								Gender *
-							</label>
+							<label className="block mb-1 text-sm font-medium">Gender *</label>
 							<select
-								id="gender"
 								name="gender"
 								value={form.gender}
 								onChange={handleChange}
@@ -187,24 +183,23 @@ const Register = () => {
 							</select>
 						</div>
 
-						{/* Promo Code */}
+						{/* Referral Code */}
 						<div>
-							<label
-								htmlFor="referral"
-								className="block mb-1 text-sm font-medium">
-								Referral Code (optional)
+							<label className="block mb-1 text-sm font-medium">
+								Referral Code *
 							</label>
 							<input
 								type="text"
-								id="referral"
 								name="referral"
 								className="w-full border border-gray-300 rounded-md px-4 py-2"
 								value={form.referral}
 								onChange={handleChange}
+								required
+								readOnly={!!referralFromUrl}
+								disabled={!!referralFromUrl}
 							/>
 						</div>
 
-						{/* Error Message */}
 						{error && <p className="text-red-500 text-sm">{error}</p>}
 
 						<button

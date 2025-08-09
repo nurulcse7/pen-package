@@ -8,7 +8,7 @@ import { SettingProvider } from "@/context/SettingContext";
 import Navbar from "@/components/Shared/Navbar/Navbar";
 import Footer from "@/components/Shared/Footer/Footer";
 import { usePathname } from "next/navigation";
- 
+
 const geistMono = Geist_Mono({
 	variable: "--font-geist-mono",
 	subsets: ["latin"],
@@ -26,7 +26,7 @@ export default function RootLayout({
 	return (
 		<html lang="en" data-arp="">
 			<body
-				data-new-gr-c-s-check-loaded="14.1246.0"
+				data-new-gr-c-s-check-loaded="14.1248.0"
 				data-gr-ext-installed=""
 				className={`${geistMono.variable} antialiased`}>
 				<title>Pen Packaging</title>
