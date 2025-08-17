@@ -19,6 +19,7 @@ import {
 import { RxCross1 } from "react-icons/rx";
 import { toast } from "sonner";
 
+
 const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 	const { setting } = useSetting();
 	const { user, setUser } = useUser();
@@ -70,15 +71,7 @@ const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 
 						{/* Logo */}
 						<Link className="text-3xl text-white font-bold" href="/">
-							{setting?.siteUrl ? (
-								<img
-									className="max-h-[65px]"
-									src={setting.siteUrl}
-									alt={setting?.siteName}
-								/>
-							) : (
-								<>{setting?.siteName || "eLearning Portal"}</>
-							)}
+							<>{setting?.siteName || "eLearning Portal"}</>
 						</Link>
 					</div>
 

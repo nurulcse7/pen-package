@@ -29,7 +29,7 @@ export const baseApi = async <T = any>(
 
 	if (!res.ok) {
 		const error = await res.json();
-		throw new Error(error?.message || "API Error");
+		throw error;
 	}
 
 	return res.json();

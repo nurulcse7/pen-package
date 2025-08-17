@@ -99,8 +99,8 @@ export default function AllUsersPage() {
 			} else {
 				toast.error(res.message || "অপারেশন ব্যর্থ");
 			}
-		} catch (err) {
-			toast.error("সার্ভার ত্রুটি");
+		} catch (err:any) {
+			toast.error(err.message||"সার্ভার ত্রুটি");
 		}
 	};
 

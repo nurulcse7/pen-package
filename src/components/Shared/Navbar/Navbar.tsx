@@ -23,15 +23,7 @@ const Navbar = () => {
 			<div className="container mx-auto px-4 flex items-center justify-between">
 				{/* Logo */}
 				<Link href="/" className="text-3xl font-bold text-blue-600">
-					{setting?.siteUrl ? (
-						<img
-							className="max-h-[80px]"
-							src={setting.siteUrl}
-							alt={setting?.siteName}
-						/>
-					) : (
-						<>{setting?.siteName || "eLearning Portal"}</>
-					)}
+					<>{setting?.siteName || "eLearning Portal"}</>
 				</Link>
 
 				{/* Desktop Nav */}

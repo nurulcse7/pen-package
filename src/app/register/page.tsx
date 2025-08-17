@@ -4,12 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { baseApi } from "@/lib/baseApi";
 import { toast } from "sonner";
-import { useSearchParams } from "next/navigation";
 
 const Register = () => {
-	const searchParams = useSearchParams();
-	const referralFromUrl = searchParams.get("referral");
-
 	const [form, setForm] = useState({
 		fullName: "",
 		phone: "",
@@ -20,13 +16,16 @@ const Register = () => {
 	});
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
-	const [isSuccess, setIsSuccess] = useState(null);
+	const [isSuccess, setIsSuccess] = useState<string | null>(null);
 
+	// ✅ Referral code পড়া client-side থেকে
 	useEffect(() => {
+		const params = new URLSearchParams(window.location.search);
+		const referralFromUrl = params.get("referral");
 		if (referralFromUrl) {
 			setForm(prev => ({ ...prev, referral: referralFromUrl }));
 		}
-	}, [referralFromUrl]);
+	}, []);
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -195,8 +194,8 @@ const Register = () => {
 								value={form.referral}
 								onChange={handleChange}
 								required
-								readOnly={!!referralFromUrl}
-								disabled={!!referralFromUrl}
+								readOnly={!!form.referral}
+								disabled={!!form.referral}
 							/>
 						</div>
 

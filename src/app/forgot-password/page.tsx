@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export default function ForgotPasswordPage() {
 	const [email, setEmail] = useState("");
-	const [status, setStatus] = useState("idle"); // idle | loading | success | error
+	const [status, setStatus] = useState("idle");  
 	const [message, setMessage] = useState("");
 
 	const handleSubmit = async (e:any) => {
@@ -46,7 +46,7 @@ export default function ForgotPasswordPage() {
 					Forgot Password
 				</h1>
 				<p className="mt-2 text-gray-600 text-sm">
-					Enter your account email. We'll send you a reset link.
+					Enter your account email. We&apos;ll send you a reset link.
 				</p>
 
 				{status === "success" && (

@@ -13,8 +13,10 @@ const Login = () => {
 	const [showResendMessage, setShowResendMessage] = useState<string | null>(
 		null
 	);
+	const [resendCooldown, setResendCooldown] = useState(0);
 	const [loading, setLoading] = useState(false);
 
+	// Login handler
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setLoading(true);
@@ -22,30 +24,62 @@ const Login = () => {
 		setShowResend(false);
 		setShowResendMessage(null);
 
+		// ✅ Frontend validation
+		if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
+			setError("সঠিক ইমেইল দিন।");
+			setLoading(false);
+			return;
+		}
+		if (!password || password.length < 6) {
+			setError("পাসওয়ার্ড কমপক্ষে 6 অক্ষরের হতে হবে।");
+			setLoading(false);
+			return;
+		}
+
 		try {
 			const response = await baseApi("/auth/login", {
 				method: "POST",
 				body: { email, password },
 			});
 
+			// ✅ Successful login & verified
 			if (response.success && response?.isVerified) {
 				toast.success("লগইন সফল হয়েছে!");
 				window.location.href = `/${response.role}/dashboard`;
-			} else {
+				return;
+			}
+
+			// ✅ Backend validation responses
+			if (!response.success) {
 				setError(response.message || "লগইন ব্যর্থ হয়েছে।");
+
 				if (response?.isVerified === false) {
 					setShowResend(true);
+					setShowResendMessage(
+						"আপনার ইমেইল এখনো ভেরিফাই হয়নি। ইমেইল পুনরায় পাঠাতে পারেন।"
+					);
 				}
+				return;
 			}
 		} catch (err: any) {
-			setShowResend(true);
 			setError(err?.message || "লগইন ব্যর্থ হয়েছে।");
+			if (err?.isVerified === false) {
+				setShowResend(true);
+				setShowResendMessage(
+					err?.message ||
+						"আপনার ইমেইল এখনো ভেরিফাই হয়নি। ইমেইল পুনরায় পাঠাতে পারেন।"
+				);
+			}
 		} finally {
 			setLoading(false);
 		}
 	};
 
+	// Resend verification handler
 	const handleResend = async () => {
+		if (resendCooldown > 0) return;
+		setLoading(true);
+
 		try {
 			const resendRes = await baseApi("/auth/resend-verification", {
 				method: "POST",
@@ -54,17 +88,30 @@ const Login = () => {
 			setShowResendMessage(
 				resendRes?.message || "ভেরিফিকেশন লিংক পাঠানো হয়েছে।"
 			);
+
+			setResendCooldown(60);
+			const interval = setInterval(() => {
+				setResendCooldown(prev => {
+					if (prev <= 1) {
+						clearInterval(interval);
+						return 0;
+					}
+					return prev - 1;
+				});
+			}, 1000);
 		} catch (err: any) {
 			toast.error(err.message || "রিসেন্ড করতে সমস্যা হয়েছে।");
+		} finally {
+			setLoading(false);
 		}
 	};
-
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
 			<div className="bg-white text-black p-8 rounded-md shadow-md w-full max-w-md">
 				<h2 className="text-2xl font-semibold text-center mb-4">লগইন করুন</h2>
 
 				<form onSubmit={handleSubmit} className="space-y-4">
+					{/* Email */}
 					<input
 						type="email"
 						placeholder="আপনার ইমেইল দিন"
@@ -73,6 +120,8 @@ const Login = () => {
 						onChange={e => setEmail(e.target.value)}
 						required
 					/>
+
+					{/* Password */}
 					{!showResend && (
 						<input
 							type="password"
@@ -84,32 +133,32 @@ const Login = () => {
 						/>
 					)}
 
+					{/* Error message */}
 					{error && !showResend && (
 						<p className="text-red-500 text-sm">{error}</p>
 					)}
 
-					{showResend && !showResendMessage && (
-						<p className="text-sm text-center text-red-600">
-							আপনার ইমেইল এখনো ভেরিফাই হয়নি। নিচে থেকে আবার ভেরিফিকেশন লিংক
-							পাঠাতে পারেন।
-						</p>
-					)}
-
-					{showResend && (
-						<div className="mt-2">
-							{showResendMessage ? (
-								<p className="text-green-600 text-sm">{showResendMessage}</p>
-							) : (
-								<button
-									type="button"
-									onClick={handleResend}
-									className="text-sm cursor-pointer text-blue-600 underline">
-									ভেরিফিকেশন লিংক আবার পাঠান
-								</button>
-							)}
+					{/* Resend verification UI */}
+					{showResend && showResendMessage && (
+						<div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md text-center">
+							<p className="text-sm text-red-700 mb-2">{showResendMessage}</p>
+							<button
+								type="button"
+								onClick={handleResend}
+								disabled={resendCooldown > 0 || loading}
+								className={`inline-block px-4 py-2 text-white text-sm font-medium rounded transition-colors ${
+									resendCooldown > 0 || loading
+										? "bg-gray-400 cursor-not-allowed"
+										: "bg-blue-600 hover:bg-blue-700"
+								}`}>
+								{resendCooldown > 0
+									? `পুনরায় পাঠানো যাবে ${resendCooldown}s পরে`
+									: "ভেরিফিকেশন লিংক আবার পাঠান"}
+							</button>
 						</div>
 					)}
 
+					{/* Remember me */}
 					{!showResend && (
 						<div className="flex items-center space-x-2">
 							<input
@@ -123,6 +172,7 @@ const Login = () => {
 						</div>
 					)}
 
+					{/* Login button */}
 					{!showResend && (
 						<button
 							type="submit"
@@ -135,6 +185,8 @@ const Login = () => {
 							{loading ? "প্রসেসিং..." : "লগইন"}
 						</button>
 					)}
+
+					{/* Links */}
 					{!showResend && (
 						<div className="flex justify-between text-sm mt-3">
 							<Link href="/register" className="text-blue-600 hover:underline">

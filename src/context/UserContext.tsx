@@ -9,7 +9,7 @@ interface User {
 	balance: number;
 	phone: number;
 	gender: string;
-	referralId: number;
+	referralId: any;
 	isPaid: boolean;
 	status: string;
 }
