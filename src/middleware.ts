@@ -44,7 +44,7 @@ export const config = {
 		"/register",
 		"/login",
 		"/superAdmin",
-		"superAdmin/:page",
+		"/superAdmin/:page",
 		"/admin",
 		"/admin/:page",
 		"/user",
