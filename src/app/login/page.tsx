@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { baseApi } from "@/lib/baseApi";
 import { toast } from "sonner";
+import Cookies from "js-cookie";
 
 const Login = () => {
 	const [email, setEmail] = useState("");
@@ -44,6 +45,7 @@ const Login = () => {
 
 			// ✅ Successful login & verified
 			if (response.success && response?.isVerified) {
+				Cookies.set("token", response.token, { expires: 7 });
 				toast.success("লগইন সফল হয়েছে!");
 				window.location.href = `/${response.role}/dashboard`;
 				return;
