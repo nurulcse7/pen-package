@@ -8,6 +8,7 @@ import Navbar from "@/components/Shared/UserNavbar/Navbar";
 import { Geist_Mono } from "next/font/google";
 import Spinner from "@/components/Shared/Spinner/Spinner";
 import AdminSidePanel from "@/components/admin/AdminSidePanel";
+import { useSetting } from "@/context/SettingContext";
 
 const geistMono = Geist_Mono({
 	variable: "--font-geist-mono",
@@ -19,6 +20,7 @@ export default function AdminRootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const {setting}=useSetting()
 	const { user, loading } = useUser();
 	const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
 	const router = useRouter();
@@ -37,7 +39,15 @@ export default function AdminRootLayout({
 
 	return (
 		<div className={`${geistMono.variable} antialiased`}>
-			<title>Admin Dashboard | Pen Packaging</title>
+			<title>
+				Admin Dashboard | {setting?.siteName || "TelentScopeMarketing"}
+			</title>
+			<meta
+				name="description"
+				content={
+					setting?.siteName || "Default description for TelentScopeMarketing"
+				}
+			/>
 			<Navbar
 				setIsSidePanelOpen={setIsSidePanelOpen}
 				isSidePanelOpen={isSidePanelOpen}

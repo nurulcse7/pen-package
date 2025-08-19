@@ -1,6 +1,9 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { baseApi } from "@/lib/baseApi";
+import Cookies from "js-cookie";
+
+
 interface User {
 	_id: string;
 	fullName: string;
@@ -35,6 +38,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 				const res = await baseApi("/auth/me");
 				setUser(res);
 			} catch {
+		Cookies.remove("token");
 				setUser(null);
 			} finally {
 				setLoading(false);

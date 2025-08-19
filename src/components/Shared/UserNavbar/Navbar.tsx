@@ -18,7 +18,7 @@ import {
 } from "react-icons/fi";
 import { RxCross1 } from "react-icons/rx";
 import { toast } from "sonner";
-
+import Cookies from "js-cookie";
 
 const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 	const { setting } = useSetting();
@@ -52,6 +52,7 @@ const Navbar = ({ setIsSidePanelOpen, isSidePanelOpen }: any) => {
 		const response = await baseApi("/auth/logout", { method: "POST" });
 		if (!response.success) throw new Error(response.message || "Logout failed");
 		setUser(null);
+		Cookies.remove("token");
 		toast.success(response?.message);
 		router.push("/login");
 	};
